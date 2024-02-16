@@ -1,0 +1,32 @@
+{% extends 'users/patient/patient_base.html' %}
+{% block content %}
+
+<section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+      <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+        <h1 class="title-font font-medium text-3xl text-gray-900">Join Us and Take Control of Your Health Journey!</h1>
+        <p class="leading-relaxed mt-4">Ready to Experience Seamless Healthcare Management? Sign up now to gain access to our patient management system. Take charge of your health by scheduling appointments, accessing medical records, and staying connected with your healthcare team. Your journey to better health starts here.</p>
+      </div>
+      <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+        <h2 class="text-gray-900 text-lg font-medium title-font mb-5">Sign Up</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="relative mb-4">
+              <input type="text" id="username" name="username" class="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Username">
+            </div>
+            <div class="relative mb-4">
+              <input type="email" id="email" name="email" class="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="abc@xyz.com">
+            </div>
+            <div class="relative mb-4">
+              <input type="text" id="password1" name="password1" class="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Password">
+            </div>
+            <div class="relative mb-4">
+              <input type="text" id="passowrd2" name="password2" class="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Re-enter passowrd">
+            </div>
+        <button class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg" type="submit" >Signup</button>
+        <p class="text-xs text-gray-500 mt-3">Already have an account? <a href="{% url 'patient-login' %}" >Login</a></p>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

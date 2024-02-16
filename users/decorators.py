@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
+
             return redirect('dashboard')
         else:
             return view_func(request, *args, **kwargs)
@@ -29,14 +30,8 @@ def admin_only(view_func):
         if request.user.groups.exists():
             group = request.user.groups.all()[0].name
 
-        if group == 'patient':
-            return redirect('patient-dashboard')
-
-        if group == 'doctor':
-            return redirect('doctor-dashboard')
-        
-        if group == 'staff':
-            return redirect('staff-dashboard')
+        if group in ['patient', 'doctor', 'staff']:
+            return redirect(f'{group}-dashboard')  # Redirect based on the group name
 
         if group == 'admin':
             return view_func(request, *args, **kwargs)

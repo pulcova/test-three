@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitiGo</title>
-</head>
-<body>
-    Patient Dashboard
-</body>
-</html>
+{% extends 'users/patient/patient_base.html' %}
+{% block content %}
+{% include 'users/patient/patient_bookings.html' %}
+{% endblock %}
