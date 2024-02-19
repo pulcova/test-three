@@ -120,6 +120,9 @@ def patientProfile(request):
 def patientUpdateProfile(request):
     return render(request, 'users/patient/patient_update_profile.html')
 
+def patientDeleteProfile(request):
+    return render(request, 'users/patient/patient_delete_profile.html')
+
 
 # Staff login, signup, dashboard, profile, update profile, delete profile
 def staffLogin(request):
@@ -146,6 +149,7 @@ def staffProfile(request):
     return render(request, 'users/staff/staff_profile.html')
 
 def staffUpdateProfile(request):    
+
     return render(request, 'users/staff/staff_update_profile.html')
 
 def staffDeleteProfile(request):

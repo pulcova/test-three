@@ -28,6 +28,7 @@ urlpatterns = [
     path('patient/guide/', views.patientGuidelines, name='patient-guide'),
     path('patient/profile/', views.patientProfile, name='patient-profile'),
     path('patient/update-profile/', views.patientUpdateProfile, name='patient-update-profile'),
+    path('patient/delete-profile/', views.patientDeleteProfile, name='patient-delete-profile'),
 
     # Staff login, signup, dashboard
     path('staff/login/', views.staffLogin, name='staff-login'),
