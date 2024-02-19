@@ -49,7 +49,7 @@ def userPage(request):
     return render(request, 'users/user.html')
 
 
-# Doctor login, signup, dashboard  
+# Doctor login, signup, dashboard, profile, update profile, delete profile
 def doctorLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -67,7 +67,16 @@ def doctorLogout(request):
     logout(request)
     return redirect('landing-page')
 
-# Patient login, signup, dashboard
+def doctorProfile(request):
+    return render(request, 'users/doctor/doctor_profile.html')
+
+def doctorUpdateProfile(request):
+    return render(request, 'users/doctor/doctor_update_profile.html')
+
+def doctorDeleteProfile(request):
+    return render(request, 'users/doctor/doctor_delete_profile.html')
+
+# Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -105,8 +114,14 @@ def patientDashboard(request):
 def patientGuidelines(request):
     return render(request, 'users/patient/patient_guide.html')
 
+def patientProfile(request):
+    return render(request, 'users/patient/patient_profile.html')
 
-# Staff login, signup, dashboard
+def patientUpdateProfile(request):
+    return render(request, 'users/patient/patient_update_profile.html')
+
+
+# Staff login, signup, dashboard, profile, update profile, delete profile
 def staffLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -127,6 +142,15 @@ def staffLogout(request):
 def staffDashboard(request):
     return render(request, 'users/staff/staff_dashboard.html')
 
+def staffProfile(request):
+    return render(request, 'users/staff/staff_profile.html')
+
+def staffUpdateProfile(request):    
+    return render(request, 'users/staff/staff_update_profile.html')
+
+def staffDeleteProfile(request):
+    return render(request, 'users/staff/staff_delete_profile.html')
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['doctor'])
 def doctorDashboard(request):
@@ -144,4 +168,3 @@ def staffDashboard(request):
 
 def landingPage(request):
     return render(request, 'users/landing_page.html')
-
