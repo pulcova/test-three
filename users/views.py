@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import CreateUserForm, PatientUpdateForm, StaffUpdateForm, DoctorUpdateForm
@@ -110,6 +112,7 @@ def doctorDashboard(request):
     context = {'doctor': doctor}
     return render(request, 'users/doctor/doctor_dashboard.html', context)
 
+
 # Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
     if request.method == 'POST':
@@ -133,6 +136,7 @@ def patientSignup(request):
             user = form.save()
             group = Group.objects.get(name='patient')
             user.groups.add(group)
+            Patient.objects.create( user=user )
             return redirect('patient-login')
 
     context = {'form': form}
@@ -248,6 +252,16 @@ def staffDashboard(request):
 
     context = {'staff': staff}    
     return render(request, 'users/staff/staff_dashboard.html', context)
+
+def staffList(request):
+    staff = Staff.objects.all()
+    
+    # Print the list of staff users for debugging
+    for user in staff:
+        print(f"Username: {user.name}, Email: {user.email}")
+
+    context = {'staff': staff}
+    return render(request, 'users/doctor/doctor_staff_list.html', context)
 
 def landingPage(request):
     return render(request, 'users/landing_page.html')

@@ -21,11 +21,12 @@
         <a href="{% url 'doctor-dashboard' %}" class="mr-5 hover text-gray-900">Dashboard</a>
         <a href="#" class="mr-5 hover:text-gray-900">Scheduled Sessions</a>
         <a href="#" class="mr-5 hover:text-gray-900">My Bookings</a>
+        <a href="{% url 'doctor-staff-list' %}" class="mr-5 hover:text-gray-900">Staff</a>
         <a href="{% url 'doctor-profile' %}" class="mr-5 hover:text-gray-900">Settings</a>
       </nav>
       </div>
     <div>     
-      <span>Hello, {{ doctor.name }} </span>
+      <span>Hello, {{ doctor.name|default:request.user }} </span>
       <a href="{% url 'doctor-logout' %}"><button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Logout
         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
           <path d="M5 12h14M12 5l7 7-7 7"></path>

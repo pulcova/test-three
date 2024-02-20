@@ -19,6 +19,7 @@ urlpatterns = [
     path('doctor/profile/', views.doctorProfile, name='doctor-profile'),
     path('doctor/update-profile/', views.doctorUpdateProfile, name='doctor-update-profile'),
     path('doctor/delete-profile/', views.doctorDeleteProfile, name='doctor-delete-profile'),
+    path('doctor/staff-list', views.staffList, name='doctor-staff-list'),
 
     # Patient login, signup, dashboard``
     path('patient/login/', views.patientLogin, name='patient-login'),
