@@ -68,11 +68,15 @@ def doctorLogout(request):
     logout(request)
     return redirect('landing-page')
 
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
 def doctorProfile(request):
     doctor = Doctor.objects.get(user=request.user)
     context = {'doctor': doctor}
     return render(request, 'users/doctor/doctor_profile.html', context)
 
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
 def doctorUpdateProfile(request):
     doctor = Doctor.objects.get(user=request.user)
     form = DoctorUpdateForm(instance=doctor)
@@ -86,6 +90,8 @@ def doctorUpdateProfile(request):
     context = {'form': form, 'doctor': doctor}
     return render(request, 'users/doctor/doctor_update_profile.html', context)
 
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
 def doctorDeleteProfile(request):
     doctor = Doctor.objects.get(user=request.user)
 
@@ -95,6 +101,14 @@ def doctorDeleteProfile(request):
     
     context = {'doctor': doctor}
     return render(request, 'users/doctor/doctor_delete_profile.html', context)
+
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
+def doctorDashboard(request):
+    doctor = Doctor.objects.get(user=request.user)
+
+    context = {'doctor': doctor}
+    return render(request, 'users/doctor/doctor_dashboard.html', context)
 
 # Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
@@ -162,6 +176,13 @@ def patientDeleteProfile(request):
     context = {'patient': patient}
     return render(request, 'users/patient/patient_delete_profile.html', context)
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def patientDashboard(request):
+    patient = Patient.objects.get(user=request.user)
+
+    context = {'patient': patient}
+    return render(request, 'users/patient/patient_dashboard.html', context)
 
 # Staff login, signup, dashboard, profile, update profile, delete profile
 def staffLogin(request):
@@ -181,14 +202,20 @@ def staffLogout(request):
     logout(request)
     return redirect('landing-page')
 
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staffDashboard(request):
     return render(request, 'users/staff/staff_dashboard.html')
 
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staffProfile(request):
     staff = Staff.objects.get(user=request.user)
     context = {'staff': staff}
     return render(request, 'users/staff/staff_profile.html', context)
 
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staffUpdateProfile(request):    
     staff = Staff.objects.get(user=request.user)
     form = StaffUpdateForm(instance=staff)
@@ -202,6 +229,8 @@ def staffUpdateProfile(request):
     context = {'form': form, 'staff': staff}
     return render(request, 'users/staff/staff_update_profile.html', context)
 
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staffDeleteProfile(request):
     staff = Staff.objects.get(user=request.user)
 
@@ -212,20 +241,13 @@ def staffDeleteProfile(request):
     context = {'staff': staff}
     return render(request, 'users/staff/staff_delete_profile.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['doctor'])
-def doctorDashboard(request):
-    return render(request, 'users/doctor/doctor_dashboard.html')
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['patient'])
-def patientDashboard(request):
-    return render(request, 'users/patient/patient_dashboard.html')
-
-@login_required(login_url='login')
+@login_required(login_url='staff-login')
 @allowed_users(allowed_roles=['staff'])
-def staffDashboard(request):    
-    return render(request, 'users/staff/staff_dashboard.html')
+def staffDashboard(request):
+    staff = Staff.objects.get(user=request.user)
+
+    context = {'staff': staff}    
+    return render(request, 'users/staff/staff_dashboard.html', context)
 
 def landingPage(request):
     return render(request, 'users/landing_page.html')
