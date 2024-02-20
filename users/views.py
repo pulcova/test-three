@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
-from .forms import CreateUserForm
+from .forms import CreateUserForm, PatientUpdateForm, StaffUpdateForm, DoctorUpdateForm
+from .models import Patient, Doctor, Staff
 
 @login_required(login_url='login')
 @admin_only
@@ -68,13 +69,32 @@ def doctorLogout(request):
     return redirect('landing-page')
 
 def doctorProfile(request):
-    return render(request, 'users/doctor/doctor_profile.html')
+    doctor = Doctor.objects.get(user=request.user)
+    context = {'doctor': doctor}
+    return render(request, 'users/doctor/doctor_profile.html', context)
 
 def doctorUpdateProfile(request):
-    return render(request, 'users/doctor/doctor_update_profile.html')
+    doctor = Doctor.objects.get(user=request.user)
+    form = DoctorUpdateForm(instance=doctor)
+
+    if request.method == 'POST':
+        form = DoctorUpdateForm(request.POST, instance=doctor)
+        if form.is_valid():
+            form.save()
+            return redirect('doctor-profile')
+    
+    context = {'form': form, 'doctor': doctor}
+    return render(request, 'users/doctor/doctor_update_profile.html', context)
 
 def doctorDeleteProfile(request):
-    return render(request, 'users/doctor/doctor_delete_profile.html')
+    doctor = Doctor.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        doctor.user.delete()
+        return redirect('landing-page')
+    
+    context = {'doctor': doctor}
+    return render(request, 'users/doctor/doctor_delete_profile.html', context)
 
 # Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
@@ -115,13 +135,32 @@ def patientGuidelines(request):
     return render(request, 'users/patient/patient_guide.html')
 
 def patientProfile(request):
-    return render(request, 'users/patient/patient_profile.html')
+    patient = Patient.objects.get(user=request.user)
+    context = {'patient': patient}
+    return render(request, 'users/patient/patient_profile.html', context)
 
 def patientUpdateProfile(request):
-    return render(request, 'users/patient/patient_update_profile.html')
+    patient = Patient.objects.get(user=request.user)
+    form = PatientUpdateForm(instance=patient)
+    
+    if request.method == 'POST':
+        form = PatientUpdateForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('patient-profile')
+
+    context = {'form': form, 'patient': patient}
+    return render(request, 'users/patient/patient_update_profile.html', context)
 
 def patientDeleteProfile(request):
-    return render(request, 'users/patient/patient_delete_profile.html')
+    patient = Patient.objects.get(user=request.user)
+    
+    if request.method == 'POST':
+        patient.user.delete()
+        return redirect('landing-page')
+    
+    context = {'patient': patient}
+    return render(request, 'users/patient/patient_delete_profile.html', context)
 
 
 # Staff login, signup, dashboard, profile, update profile, delete profile
@@ -146,14 +185,32 @@ def staffDashboard(request):
     return render(request, 'users/staff/staff_dashboard.html')
 
 def staffProfile(request):
-    return render(request, 'users/staff/staff_profile.html')
+    staff = Staff.objects.get(user=request.user)
+    context = {'staff': staff}
+    return render(request, 'users/staff/staff_profile.html', context)
 
 def staffUpdateProfile(request):    
+    staff = Staff.objects.get(user=request.user)
+    form = StaffUpdateForm(instance=staff)
 
-    return render(request, 'users/staff/staff_update_profile.html')
+    if request.method == 'POST':
+        form = StaffUpdateForm(request.POST, instance=staff)
+        if form.is_valid():
+            form.save()
+            return redirect('staff-profile')
+        
+    context = {'form': form, 'staff': staff}
+    return render(request, 'users/staff/staff_update_profile.html', context)
 
 def staffDeleteProfile(request):
-    return render(request, 'users/staff/staff_delete_profile.html')
+    staff = Staff.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        staff.user.delete()
+        return redirect('landing-page')
+    
+    context = {'staff': staff}
+    return render(request, 'users/staff/staff_delete_profile.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['doctor'])
