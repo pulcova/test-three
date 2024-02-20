@@ -23,7 +23,7 @@
                 <a href="{% url 'staff-profile' %}" class="text-gray-600 ml-4 hover:underline">Cancel</a>
             </form>
         </div>
-        <img alt="ecommerce" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src="{% static 'images/profile.png' %}">
+        {% include 'users/doctor/doctor_profile_picture.html' %}
       </div>
     </div>
   </section>

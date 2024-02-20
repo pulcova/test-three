@@ -1,0 +1,10 @@
+{% load static %}
+<div class="lg:w-1/2 w-full lg:pl-10 flex items-center justify-center">
+    <div class="w-84 h-84 flex items-center justify-center border border-gray-300 rounded-md shadow-md">
+        {% if request.user.staff.profile_picture %}
+    <img alt="Profile Picture" class="w-full h-full object-cover object-center rounded-full" src="{{ request.user.staff.profile_picture.url }}">
+{% else %}
+    <img alt="Default Profile Picture" class="w-full h-full object-cover object-center rounded-full" src="{% static 'images/profile.png' %}">
+{% endif %}
+    </div>
+</div>

@@ -8,32 +8,32 @@ from .models import Doctor, Patient, Staff
 class CreateDoctorForm(ModelForm):
     class Meta:
         model = Doctor
-        fields = '__all__'
+        fields = ['name', 'email', 'phone']
 
 class DoctorUpdateForm(forms.ModelForm):
     class Meta:
         model = Doctor
-        fields = ['name', 'email', 'phone']
+        fields = ['name', 'email', 'phone', 'profile_picture']
 
 class CreatePatientForm(ModelForm):
     class Meta:
         model = Patient
-        fields = '__all__'
+        fields = ['name', 'email', 'phone']
 
 class PatientUpdateForm(forms.ModelForm):
     class Meta:
         model = Patient
-        fields = ['name', 'email', 'phone']
+        fields = ['name', 'email', 'phone', 'profile_picture']
 
 class CreateStaffForm(ModelForm):
     class Meta:
         model = Staff
-        fields = '__all__'
+        fields = ['name', 'email', 'phone']
 
 class StaffUpdateForm(forms.ModelForm):
     class Meta:
         model = Patient
-        fields = ['name', 'email', 'phone']
+        fields = ['name', 'email', 'phone', 'profile_picture']
 
 class CreateUserForm(UserCreationForm):
     class Meta:

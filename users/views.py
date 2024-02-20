@@ -51,6 +51,9 @@ def logoutUser(request):
 def userPage(request):
     return render(request, 'users/user.html')
 
+def landingPage(request):
+    return render(request, 'users/landing_page.html')
+
 
 # Doctor login, signup, dashboard, profile, update profile, delete profile
 def doctorLogin(request):
@@ -84,7 +87,7 @@ def doctorUpdateProfile(request):
     form = DoctorUpdateForm(instance=doctor)
 
     if request.method == 'POST':
-        form = DoctorUpdateForm(request.POST, instance=doctor)
+        form = DoctorUpdateForm(request.POST, request.FILES, instance=doctor)
         if form.is_valid():
             form.save()
             return redirect('doctor-profile')
@@ -111,6 +114,14 @@ def doctorDashboard(request):
 
     context = {'doctor': doctor}
     return render(request, 'users/doctor/doctor_dashboard.html', context)
+
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
+def staffList(request):
+    staff = Staff.objects.all()
+
+    context = {'staff': staff}
+    return render(request, 'users/doctor/doctor_staff_list.html', context)
 
 
 # Patient login, signup, dashboard, profile, update profile, delete profile
@@ -146,23 +157,31 @@ def patientLogout(request):
     logout(request)
     return redirect('landing-page')
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def patientDashboard(request):
     return render(request, 'users/patient/patient_dashboard.html')
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def patientGuidelines(request):
     return render(request, 'users/patient/patient_guide.html')
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def patientProfile(request):
     patient = Patient.objects.get(user=request.user)
     context = {'patient': patient}
     return render(request, 'users/patient/patient_profile.html', context)
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def patientUpdateProfile(request):
     patient = Patient.objects.get(user=request.user)
     form = PatientUpdateForm(instance=patient)
     
     if request.method == 'POST':
-        form = PatientUpdateForm(request.POST, instance=patient)
+        form = PatientUpdateForm(request.POST, request.FILES, instance=patient)
         if form.is_valid():
             form.save()
             return redirect('patient-profile')
@@ -170,6 +189,8 @@ def patientUpdateProfile(request):
     context = {'form': form, 'patient': patient}
     return render(request, 'users/patient/patient_update_profile.html', context)
 
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def patientDeleteProfile(request):
     patient = Patient.objects.get(user=request.user)
     
@@ -225,7 +246,7 @@ def staffUpdateProfile(request):
     form = StaffUpdateForm(instance=staff)
 
     if request.method == 'POST':
-        form = StaffUpdateForm(request.POST, instance=staff)
+        form = StaffUpdateForm(request.POST, request.FILES, instance=staff)
         if form.is_valid():
             form.save()
             return redirect('staff-profile')
@@ -252,16 +273,3 @@ def staffDashboard(request):
 
     context = {'staff': staff}    
     return render(request, 'users/staff/staff_dashboard.html', context)
-
-def staffList(request):
-    staff = Staff.objects.all()
-    
-    # Print the list of staff users for debugging
-    for user in staff:
-        print(f"Username: {user.name}, Email: {user.email}")
-
-    context = {'staff': staff}
-    return render(request, 'users/doctor/doctor_staff_list.html', context)
-
-def landingPage(request):
-    return render(request, 'users/landing_page.html')
