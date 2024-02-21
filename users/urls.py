@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
 
 from . import views
 
@@ -14,7 +15,7 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    # Doctor login, signup, dashboard
+    # Doctor login, signup, dashboard, staff-list
     path('doctor/login/', views.doctorLogin, name='doctor-login'),
     path('doctor/logout/', views.doctorLogout, name='doctor-logout'),
     path('doctor/', views.doctorDashboard, name='doctor-dashboard'),
@@ -23,7 +24,7 @@ urlpatterns = [
     path('doctor/delete-profile/', views.doctorDeleteProfile, name='doctor-delete-profile'),
     path('doctor/staff-list', views.staffList, name='doctor-staff-list'),
 
-    # Patient login, signup, dashboard``
+    # Patient login, signup, dashboard, guidelines
     path('patient/login/', views.patientLogin, name='patient-login'),
     path('patient/signup/', views.patientSignup, name='patient-signup'),
     path('patient/logout/', views.patientLogout, name='patient-logout'),
@@ -33,7 +34,7 @@ urlpatterns = [
     path('patient/update-profile/', views.patientUpdateProfile, name='patient-update-profile'),
     path('patient/delete-profile/', views.patientDeleteProfile, name='patient-delete-profile'),
 
-    # Staff login, signup, dashboard
+    # Staff login, signup, dashboard, patient-list
     path('staff/login/', views.staffLogin, name='staff-login'),
     path('staff/logout/', views.staffLogout, name='staff-logout'),
     path('staff/', views.staffDashboard, name='staff-dashboard'),
@@ -41,9 +42,13 @@ urlpatterns = [
     path('staff/update-profile/', views.staffUpdateProfile, name='staff-update-profile'),
     path('staff/delete-profile/', views.staffDeleteProfile, name='staff-delete-profile'),
 
-    # Password reset staff
-    path('staff/password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('staff/password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('staff/password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('staff/password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    # Password reset for user, doctor, patient, staff
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('accounts/login/', RedirectView.as_view(url='/')),
+
+
+    path('health-records/', views.redirect_to_docs_dashboard, name='health_records'),
 ]

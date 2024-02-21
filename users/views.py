@@ -273,3 +273,7 @@ def staffDashboard(request):
 
     context = {'staff': staff}    
     return render(request, 'users/staff/staff_dashboard.html', context)
+
+
+def redirect_to_docs_dashboard(request):
+    return redirect('docs_dashboard')
