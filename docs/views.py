@@ -1,14 +1,50 @@
-from django.shortcuts import render, redirect
-from .forms import PatientPrescriptionForm, PatientReportForm, PatientBillsForm, PatientVaccinationForm
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.conf import settings
+from django.http import FileResponse, Http404
 
+from .forms import PatientPrescriptionForm, PatientReportForm, PatientBillsForm, PatientVaccinationForm
+from .models import PatientPrescription, PatientReport, PatientBills, PatientVaccination
+from users.models import Patient
+from users.decorators import allowed_users
+
+import os
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def docs_dashboard(request):
-    return render(request, 'docs/docs_dashboard.html')
+    user = request.user
+    patient = get_object_or_404(Patient, user=user)
 
+    patient_bills = PatientBills.objects.filter(patient=patient)
+    patient_bills = [{'bill': os.path.basename(bill.bill.name), 'date': bill.date} for bill in patient_bills]
+    
+    patient_prescriptions = PatientPrescription.objects.filter(patient=patient)
+    patient_prescriptions = [{'prescription': os.path.basename(prescription.prescription.name), 'date': prescription.date} for prescription in patient_prescriptions]
+    
+    patient_reports = PatientReport.objects.filter(patient=patient)
+    patient_reports = [{'report': os.path.basename(report.report.name), 'date': report.date} for report in patient_reports]
+    
+    patient_vaccinations = PatientVaccination.objects.filter(patient=patient)
+    patient_vaccinations = [{'vaccine': os.path.basename(vaccine.vaccine.name), 'date': vaccine.date} for vaccine in patient_vaccinations]
+    
+    context = {
+        'patient': patient,
+        'patient_bills': patient_bills,
+        'patient_prescriptions': patient_prescriptions,
+        'patient_reports': patient_reports,
+        'patient_vaccinations': patient_vaccinations,
+    }
+    return render(request, 'docs/docs_dashboard.html', context)
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def select_upload_category(request):
     return render(request, 'docs/select_upload_category.html')
 
-
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def upload_prescription(request):
     if request.method == 'POST':
         form = PatientPrescriptionForm(request.POST, request.FILES)
@@ -21,7 +57,8 @@ def upload_prescription(request):
         form = PatientPrescriptionForm()
     return render(request, 'docs/upload_prescription.html', {'form': form})
 
-
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def upload_report(request):
     if request.method == 'POST':
         form = PatientReportForm(request.POST, request.FILES)
@@ -34,7 +71,8 @@ def upload_report(request):
         form = PatientReportForm()
     return render(request, 'docs/upload_report.html', {'form': form})
 
-
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def upload_bill(request):
     if request.method == 'POST':
         form = PatientBillsForm(request.POST, request.FILES)
@@ -47,7 +85,8 @@ def upload_bill(request):
         form = PatientBillsForm()
     return render(request, 'docs/upload_bill.html', {'form': form})
 
-
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
 def upload_vaccination(request):
     if request.method == 'POST':
         form = PatientVaccinationForm(request.POST, request.FILES)
