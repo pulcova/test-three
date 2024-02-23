@@ -32,8 +32,8 @@ class CreateStaffForm(ModelForm):
 
 class StaffUpdateForm(forms.ModelForm):
     class Meta:
-        model = Patient
-        fields = ['name', 'email', 'phone', 'profile_picture']
+        model = Staff
+        fields = ['name', 'email', 'phone', 'profile_picture', 'role']
 
 class CreateUserForm(UserCreationForm):
     class Meta:
