@@ -1,0 +1,93 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+
+<div class="container max-w-6xl px-4 mx-auto sm:px-8 mt-32">
+    <div class="py-8">
+        <div class="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
+            <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
+                <table class="min-w-full leading-normal">
+                    <thead>
+                        <tr>                         
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Doctor
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Date & Time
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Created at
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Mode
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                More Details
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <p class="text-gray-900 font-semibold">{{ appointment.doctor.name }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.date_and_time|date:"F d, Y" }}</p>
+                                        <p class="text-gray-500">{{ appointment.date_and_time|date:"h:i A" }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <p class="text-gray-900">{{ appointment.created_at|date:"d/m/Y" }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-gray-900">
+                                    <span class="relative">{{ appointment.mode }}</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                {% if appointment.color_code == 'A' %}
+                                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-red-900">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-red-200 rounded-full opacity-50"></span>
+                                        <span class="relative">{{ appointment.status }}</span>
+                                    </span>
+                                {% elif appointment.color_code == 'B' %}
+                                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-green-200 rounded-full opacity-50"></span>
+                                        <span class="relative">{{ appointment.status }}</span>
+                                    </span>
+                                {% elif appointment.color_code == 'C' %}
+                                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-blue-900">
+                                        <span aria-hidden="true" class="absolute inset-0 bg-blue-200 rounded-full opacity-50"></span>
+                                        <span class="relative">{{ appointment.status }}</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-black-900">
+                                    <span class="relative">
+                                       <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
+                                          </svg>                                            
+                                        </a>                                       
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

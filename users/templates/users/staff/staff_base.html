@@ -4,6 +4,18 @@
   <title>VitiGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>
 <body>
     {% include 'users/staff/staff_navbar.html' %}
     {% block content %}

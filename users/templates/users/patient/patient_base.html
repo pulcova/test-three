@@ -4,9 +4,34 @@
   <title>VitiGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOMContentLoaded event fired");
+    var calendarEl = document.getElementById('calendar');
+    console.log("calendarEl:", calendarEl);
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: [
+        // Serialized appointments data
+        {% for appointment in appointments %}
+          {
+            title: '{{ appointment.title }}',
+            start: '{{ appointment.start }}',
+          },
+        {% endfor %}
+      ]
+    });
+    console.log("calendar object:", calendar);
+    calendar.render();
+    console.log("Calendar rendered");
+  });
+</script>
+
+    </script>
 <body>
     {% include 'users/patient/patient_navbar.html' %}
-    {% block content %}
-    {% endblock %}
+      {% block content %}
+      {% endblock %}
 </body>
 </html>
