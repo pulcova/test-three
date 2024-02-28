@@ -13,7 +13,13 @@
                                 Doctor
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                Date & Time
+                                Start Time
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                End Time
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Date
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
                                 Created at
@@ -35,11 +41,27 @@
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <p class="text-gray-900 font-semibold">{{ appointment.doctor.name }}</p>
                             </td>
+
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div>
-                                        <p class="text-gray-900 font-semibold">{{ appointment.date_and_time|date:"F d, Y" }}</p>
-                                        <p class="text-gray-500">{{ appointment.date_and_time|date:"h:i A" }}</p>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.start_time }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.end_time }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.date }}</p>
                                     </div>
                                 </div>
                             </td>

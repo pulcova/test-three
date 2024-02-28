@@ -22,6 +22,9 @@ class Appointment(models.Model):
     )
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
     date_and_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, blank=True, default='scheduled')
     mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='in-person')
@@ -52,3 +55,12 @@ class AppointmentException(models.Model):
     authorized_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)  
     reason = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Slot(models.Model):
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    doctor = models.ForeignKey(Doctor, null=True, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    is_available = models.BooleanField(default=True)
