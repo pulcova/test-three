@@ -147,7 +147,12 @@ def patientSignup(request):
             user = form.save()
             group = Group.objects.get(name='patient')
             user.groups.add(group)
-            Patient.objects.create( user=user )
+
+            Patient.objects.create(
+                user=user,
+                name=form.cleaned_data['username'], 
+                email=form.cleaned_data['email'],
+            )
             return redirect('patient-login')
 
     context = {'form': form}
@@ -182,6 +187,7 @@ def patientUpdateProfile(request):
     
     if request.method == 'POST':
         form = PatientUpdateForm(request.POST, request.FILES, instance=patient)
+        print(form.errors)  # print form errors for debugging
         if form.is_valid():
             form.save()
             return redirect('patient-profile')
