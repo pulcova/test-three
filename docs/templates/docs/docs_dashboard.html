@@ -26,7 +26,13 @@
               <td class="px-4 py-3">{{ bill.bill }}</td>
               <td class="px-4 py-3">Bill</td>
               <td id="datetime" class="px-4 py-3">{{ bill.date }}</td>
-              <td class="px-4 py-3"><a href="#" class="text-indigo-500 inline-flex items-center">View</a></td>
+              <td class="px-4 py-3">
+                {% if bill.id %} 
+                    <a href="{% url 'view_bill' bill.id %}" target="_blank" class="text-indigo-500 inline-flex items-center">View</a>
+                {% else %}
+                    <span class="text-gray-500">Unavailable</span>
+                {% endif %}
+            </td>
               <td class="px-4 py-3"><a href="#" class="text-red-500 inline-flex items-center">Delete</a></td>
             </tr>
             {% endfor %}
@@ -35,7 +41,13 @@
               <td class="px-4 py-3">{{ prescription.prescription }}</td>
               <td class="px-4 py-3">Prescription</td>
               <td id="datetime" class="px-4 py-3">{{ prescription.date }}</td>
-              <td class="px-4 py-3"><a href="#" class="text-indigo-500 inline-flex items-center">View</a></td>
+              <td class="px-4 py-3">
+                {% if prescription.id %} 
+                    <a href="{% url 'view_prescription' prescription.id %}" target="_blank" class="text-indigo-500 inline-flex items-center">View</a>
+                {% else %}
+                    <span class="text-gray-500">Unavailable</span>
+                {% endif %}
+            </td>
               <td class="px-4 py-3"><a href="#" class="text-red-500 inline-flex items-center">Delete</a></td>
             </tr>
             {% endfor %}
@@ -44,16 +56,28 @@
               <td class="px-4 py-3">{{ report.report }}</td>
               <td class="px-4 py-3">Report</td>
               <td id="datetime" class="px-4 py-3">{{ report.date }}</td>
-              <td class="px-4 py-3"><a href="#" class="text-indigo-500 inline-flex items-center">View</a></td>
+              <td class="px-4 py-3">
+                {% if report.id %} 
+                    <a href="{% url 'view_report' report.id %}" target="_blank" class="text-indigo-500 inline-flex items-center">View</a>
+                {% else %}
+                    <span class="text-gray-500">Unavailable</span>
+                {% endif %}
+              </td>
               <td class="px-4 py-3"><a href="#" class="text-red-500 inline-flex items-center">Delete</a></td>
             </tr>
             {% endfor %}
-            {% for vaccine in patient_vaccinations %}
+            {% for vaccination in patient_vaccinations %}
             <tr>
-              <td class="px-4 py-3">{{ vaccine.vaccine }}</td>
+              <td class="px-4 py-3">{{ vaccination.vaccine }}</td>
               <td class="px-4 py-3">Vaccine</td>
-              <td id="datetime" class="px-4 py-3">{{ vaccine.date }}</td>
-              <td class="px-4 py-3"><a href="#" class="text-indigo-500 inline-flex items-center">View</a></td>
+              <td id="datetime" class="px-4 py-3">{{ vaccination.date }}</td>
+              <td class="px-4 py-3">
+                {% if vaccination.id %} 
+                    <a href="{% url 'view_vaccination' vaccination.id %}" target="_blank" class="text-indigo-500 inline-flex items-center">View</a>
+                {% else %}
+                    <span class="text-gray-500">Unavailable</span>
+                {% endif %}
+            </td>
               <td class="px-4 py-3"><a href="#" class="text-red-500 inline-flex items-center">Delete</a></td>
             </tr>
             {% endfor %}
