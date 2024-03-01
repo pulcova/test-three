@@ -4,13 +4,14 @@ from users.decorators import allowed_users
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, time
 from django.shortcuts import render, redirect, get_object_or_404
 
 from  users.models import Patient, Doctor
 from .models import Appointment, Slot
-from .forms import PatientAppointmentForm
+from .forms import PatientAppointmentForm, PatientAppointmentUpdateForm
 from users.decorators import allowed_users
+from datetime import datetime
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -38,7 +39,6 @@ def send_appointment_confirmation_email(appointment):
         html_message=message_html,
     )
 
-
 @login_required(login_url='patient-login')
 @allowed_users(allowed_roles=['patient'])
 def choose_appointment_slot(request):  
@@ -65,6 +65,16 @@ def appointment_booking_form(request):
         start_time = request.GET.get('start_time').replace('a.m.', 'AM').replace('p.m.', 'PM')
         end_time = request.GET.get('end_time').replace('a.m.', 'AM').replace('p.m.', 'PM')
 
+        if start_time.lower() == 'noon':
+            start_time = '12:00 PM'
+        elif start_time.lower() == 'midnight':
+            start_time = '12:00 AM'
+
+        if end_time.lower() == 'noon':
+            end_time = '12:00 PM'
+        elif end_time.lower() == 'midnight':
+            end_time = '12:00 AM'
+
         if ":" not in start_time and ("AM" in start_time or "PM" in start_time):
             start_time = start_time.replace(" AM", ":00 AM").replace(" PM", ":00 PM")
         if ":" not in end_time and ("AM" in end_time or "PM" in end_time):
@@ -82,11 +92,21 @@ def appointment_booking_form(request):
     elif request.method == 'POST':
         form = PatientAppointmentForm(request.POST)
         if form.is_valid():
-            appointment = form.save()
+            appointment = form.save(commit=False)
+
+            slot = Slot.objects.get(doctor=appointment.doctor, date=appointment.date, start_time=appointment.start_time, end_time=appointment.end_time)
+
+            slot.is_available = False
+            slot.patient = appointment.patient
+            slot.save()
+
+            appointment.save()
+
             send_appointment_confirmation_email(appointment)
             return redirect('patient-appointment-success')
         else:
             print("Form is invalid!")  
+            print(form.errors) 
     return render(request, 'appointments/appointment_booking_form.html', {'form': form})
 
 
@@ -133,3 +153,34 @@ def view_patient_appointments(request):
         'appointments': appointments
     }
     return render(request, 'appointments/patient_appointment_list.html', context)
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def patient_view_appointment_details(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    context = {
+        'appointment': appointment
+    }
+    return render(request, 'appointments/patient_appointment_details.html', context)
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def cancel_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, pk=appointment_id, patient=request.user.patient)  
+
+    if request.method == 'POST':
+        slot = Slot.objects.get(start_time=appointment.start_time,
+                                end_time=appointment.end_time,
+                                date=appointment.date,
+                                doctor=appointment.doctor)
+
+        slot.is_available = True
+        slot.patient = None
+        slot.save()
+
+        appointment.delete()
+
+        return redirect('patient-appointment-list')
+    return render(request, 'appointments/patient_appointment_delete.html', {'appointment': appointment})
+
