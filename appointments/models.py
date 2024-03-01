@@ -33,6 +33,7 @@ class Appointment(models.Model):
     notes = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     details_confirmation = models.BooleanField(default=False)
+    supporting_document = models.FileField(upload_to='patient_appointment_documents/', null=True, blank=True)
 
     def schedule_follow_up_reminder(self):
         reminder_date = self.date_and_time - timedelta(days=45)

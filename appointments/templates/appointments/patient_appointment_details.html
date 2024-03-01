@@ -40,11 +40,11 @@
           </div>
           <div class="col-span-2">
             <label class="block font-medium mb-1">Reason:</label>
-            <textarea class="w-full border border-gray-300 rounded-md p-2" rows="3">{{ appointment.reason }}</textarea>
+            {{ appointment.reason }}
           </div>
           <div class="col-span-2">
             <label class="block font-medium mb-1">Notes:</label>
-            <textarea class="w-full border border-gray-300 rounded-md p-2" rows="3">{{ appointment.notes }}</textarea>
+            {{ appointment.notes }}
           </div>
           <div>
             <label class="block font-medium mb-1">Created At:</label>
@@ -54,8 +54,15 @@
             <label class="block font-medium mb-1">Status:</label>
             <span class="px-3 py-1 rounded-full bg-green-100 text-green-800">{{ appointment.status }}</span>
           </div>
-        </div>
-      </div>
-      
+          <div class="col-span-2">
+            <label class="block font-medium mb-1">Supporting Document:</label>
+            {% if appointment.supporting_document %}
+              <a href="{{ appointment.supporting_document.url }}" target="_blank" class="text-blue-500 hover:underline">{{ appointment.supporting_document.name }}</a>
+            {% else %}
+              <p class="text-gray-700">No supporting document uploaded</p>
+            {% endif %}
+          </div>
+      </div>   
+</div>
 </div>
 {% endblock %}
