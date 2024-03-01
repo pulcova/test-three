@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.db.models.signals import post_delete, pre_delete
+from django.dispatch import receiver
 
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
@@ -216,6 +218,8 @@ def patientDashboard(request):
     return render(request, 'users/patient/patient_dashboard.html', context)
 
 # Staff login, signup, dashboard, profile, update profile, delete profile
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staffLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -283,3 +287,10 @@ def staffDashboard(request):
 
 def redirect_to_docs_dashboard(request):
     return redirect('docs_dashboard')
+
+
+@receiver(pre_delete, sender=Patient)
+def update_slot_on_patient_delete(sender, instance, **kwargs):
+    for slot in instance.slot_set.all():
+        slot.is_available = True
+        slot.save()

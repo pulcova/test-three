@@ -51,4 +51,5 @@ urlpatterns = [
 
 
     path('health-records/', views.redirect_to_docs_dashboard, name='health_records'),
+
 ]

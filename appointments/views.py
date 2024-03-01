@@ -260,3 +260,4 @@ def reschedule_appointment(request, appointment_id):
         form = PatientAppointmentForm()
 
     return render(request, 'appointments/reschedule_appointment.html', {'form': form, 'old_appointment': old_appointment})
+

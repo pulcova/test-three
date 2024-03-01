@@ -38,8 +38,8 @@
                   <input type="hidden" name="start_time" value="{{ slot.start_time }}">
                   <input type="hidden" name="end_time" value="{{ slot.end_time }}">
                   <input type="hidden" name="date" value="{{ slot.date }}">
-                  <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">  <!-- Add this line -->
-                  <button type="submit" class="py-1 px-4 text-sm font-semibold rounded-full {% if not slot.is_available or slot.patient %}bg-red-500 text-white hover:bg-red-600 focus:ring-red-600{% else %}bg-green-500 text-white hover:bg-green-600 focus:ring-green-600{% endif %} border focus:outline-none focus:ring-2 focus:ring-offset-2">
+                  <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">
+                  <button type="submit" class="py-1 px-4 text-sm font-semibold rounded-full {% if not slot.is_available or slot.patient %}bg-red-500 text-white cursor-not-allowed{% else %}bg-green-500 text-white hover:bg-green-600 focus:ring-green-600{% endif %} border focus:outline-none focus:ring-2 focus:ring-offset-2" {% if not slot.is_available or slot.patient %}disabled{% endif %}>
                     {{ slot.start_time }} - {{ slot.end_time }}
                   </button>
                 </form>
