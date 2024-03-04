@@ -79,7 +79,11 @@ def doctorLogout(request):
 @allowed_users(allowed_roles=['doctor'])
 def doctorProfile(request):
     doctor = Doctor.objects.get(user=request.user)
-    context = {'doctor': doctor}
+
+    full_name = doctor.name
+    first_name, last_name = full_name.split(" ")
+
+    context = {'doctor': doctor, 'first_name': first_name, 'last_name': last_name}
     return render(request, 'users/doctor/doctor_profile.html', context)
 
 @login_required(login_url='doctor-login')
@@ -89,6 +93,7 @@ def doctorUpdateProfile(request):
     form = DoctorUpdateForm(instance=doctor)
 
     if request.method == 'POST':
+        print(form.errors)
         form = DoctorUpdateForm(request.POST, request.FILES, instance=doctor)
         if form.is_valid():
             form.save()

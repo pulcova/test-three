@@ -13,7 +13,7 @@ class CreateDoctorForm(ModelForm):
 class DoctorUpdateForm(forms.ModelForm):
     class Meta:
         model = Doctor
-        fields = ['name', 'email', 'phone', 'profile_picture', 'specialization', 'license_number', 'education', 'experience', 'notes']
+        fields = ['name', 'email', 'phone', 'profile_picture', 'date_of_birth', 'gender', 'address', 'specialization', 'license_number', 'education', 'experience', 'notes']
 
 class CreatePatientForm(ModelForm):
     class Meta:

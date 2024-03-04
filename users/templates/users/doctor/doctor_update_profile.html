@@ -1,73 +1,111 @@
 {% extends 'users/doctor/doctor_base.html' %}
 {% load static %}
 {% block content %}
-
-<section class="text-gray-600 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
-        <div class="lg:w-4/5 mx-auto flex flex-wrap">
-            <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-                <h2 class="text-sm title-font text-gray-500 tracking-widest">Doctor</h2>
-                <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ doctor.name|default:request.user }}</h1>
-                <div class="flex mb-4">
-                    <a href="{% url 'doctor-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Details</a>
-                    <a class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1">Update</a>
-                    <a href="{% url 'doctor-delete-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Delete</a>
-                </div>
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <label for="id_name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-                        <input type="text" id="id_name" name="name" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.name }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                        <input type="email" id="id_email" name="email" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.email }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_phone" class="block text-gray-700 text-sm font-bold mb-2">Phone:</label>
-                        <input type="text" id="id_phone" name="phone" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.phone }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_profile_picture" class="block text-gray-700 text-sm font-bold mb-2">Profile Picture:</label>
-                        <input type="file" id="id_profile_picture" name="profile_picture" accept="image/*" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_specialization" class="block text-gray-700 text-sm font-bold mb-2">Specialization:</label>
-                        <input type="text" id="id_specialization" name="specialization" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.specialization }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_license_number" class="block text-gray-700 text-sm font-bold mb-2">License Number:</label>
-                        <input type="text" id="id_license_number" name="license_number" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.license_number }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_education" class="block text-gray-700 text-sm font-bold mb-2">Education:</label>
-                        <input type="text" id="id_education" name="education" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.education }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_experience" class="block text-gray-700 text-sm font-bold mb-2">Experience:</label>
-                        <input type="text" id="id_experience" name="experience" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500" value="{{ form.instance.experience }}">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_notes" class="block text-gray-700 text-sm font-bold mb-2">Notes:</label>
-                        <textarea id="id_notes" name="notes" class="w-full px-3 py-2 border rounded-md 
-                        placeholder-gray-400 focus:outline-none focus:border-blue-500">{{ form.instance.notes }}</textarea>
-                    </div>
-                    <div class="flex">
-                        <button class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Update</button>
-                    </div>
-                </form>
+<div class="mt-36 flex justify-center">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="space-y-12">
+      <div class="border-b border-gray-900/10 pb-12">
+        {% if request.user.doctor.profile_picture %}
+              <img src="{{ request.user.doctor.profile_picture.url }}" alt="Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+          {% else %}
+              <img src="{% static 'images/profile.png' %}" alt="Default Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+          {% endif %}
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-2">
+            <label for="id_name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+            <div class="mt-2">
+              <input type="text" name="name" id="id_name" autocomplete="name" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.name }}">
             </div>
-            {% include 'users/doctor/doctor_profile_picture.html' %}
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="id_profile_picture" class="block text-sm font-medium leading-6 text-gray-900">Profile</label>
+            <div class="mt-2">
+              <input type="file" name="profile_picture" id="id_profile_picture" accept="image/*" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.profile_picture }}">
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="id_email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+            <div class="mt-2">
+              <input type="email" name="email" id="id_email" autocomplete="email" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.email }}">
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="id_phone" class="block text-sm font-medium leading-6 text-gray-900">Phone</label>
+            <div class="mt-2">
+              <input type="tel" name="phone" id="id_phone" autocomplete="tel" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.phone }}">
+            </div>
+          </div>
+
+
+          <div class="sm:col-span-2">
+            <label for="id_date_of_birth" class="block text-sm font-medium leading-6 text-gray-900">Date of Birth</label>
+            <div class="mt-2">
+              <input type="date" name="date_of_birth" id="id_date_of_birth" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.date_of_birth }}">
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Gender</label>
+            <div class="mt-2">
+                <select name="gender" id="gender" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">
+                    <option value="M" {% if patient.gender == "M" %} selected {% endif %}>Male</option>
+                    <option value="F" {% if patient.gender == "F" %} selected {% endif %}>Female</option>
+                    <option value="O" {% if patient.gender == "O" %} selected {% endif %}>Other</option>
+                </select>
+            </div>
+            </div>
+        
+
+            <div class="sm:col-span-2">
+                <label for="id_license_number" class="block text-sm font-medium leading-6 text-gray-900">License Number</label>
+                <div class="mt-2">
+                  <input type="text" name="license_number" id="id_license_number" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.license_number }}">
+                </div>
+              </div>
+
+          <div class="sm:col-span-2">
+            <label for="id_address" class="block text-sm font-medium leading-6 text-gray-900">Address</label>
+            <div class="mt-2">
+              <input type="text" name="address" id="id_address" autocomplete="address" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6" value="{{ doctor.address }}">
+            </div>
+          </div>
+
+          <div class="sm:col-span-4">
+            <label for="id_education" class="block text-sm font-medium leading-6 text-gray-900">Education</label>
+            <div class="mt-2">
+              <textarea name="education" id="id_education" rows="3" class="block w-full border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">{{ doctor.education }}</textarea>
+            </div>
+          </div>
+
+          <div class="sm:col-span-4">
+            <label for="id_experience" class="block text-sm font-medium leading-6 text-gray-900">Experience</label>
+            <div class="mt-2">
+              <textarea name="experience" id="id_experience" rows="3" class="block w-full border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">{{ doctor.experience }}</textarea>
+            </div>
+          </div>
+
+          <div class="sm:col-span-4">
+            <label for="id_notes" class="block text-sm font-medium leading-6 text-gray-900">Notes</label>
+            <div class="mt-2">
+              <textarea name="notes" id="id_notes" rows="3" class="block w-full border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">{{ doctor.notes }}</textarea>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</section>
+  
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <a href="{% url 'doctor-profile' %}"><button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button></a>
+      <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+    </div>
+  </form>
+</div>
+  
 
 {% endblock %}
