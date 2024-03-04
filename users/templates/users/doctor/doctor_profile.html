@@ -51,6 +51,10 @@
                           <span class="ml-auto">Nov 07, 2016</span>
                       </li>
                   </ul>
+                  <div class="mt-4 flex justify-between">
+                    <a href="{% url 'doctor-update-profile' %}"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Profile</button></a>
+                    <a href="{% url 'doctor-delete-profile' %}"><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete Profile</button></a>
+                  </div>
               </div>
           </div>
           <div class="w-full md:w-9/12 mx-2 h-64">
@@ -145,6 +149,23 @@
                               </li>
                           </ul>
                       </div>
+                      <div>
+                        <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
+                            <span clas="text-green-500">
+                                <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </span>
+                            <span class="tracking-wide">Notes</span>
+                        </div>
+                        <ul class="list-inside space-y-2">
+                          <li>
+                              <div class="text-teal-600">{{ doctor.notes }}</div>
+                          </li>
+                        </ul>
+                    </div>
                   </div>
               </div>
           </div>

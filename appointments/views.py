@@ -261,3 +261,13 @@ def reschedule_appointment(request, appointment_id):
 
     return render(request, 'appointments/reschedule_appointment.html', {'form': form, 'old_appointment': old_appointment})
 
+@login_required(login_url='doctor-login')
+def doctor_appointment_list_view(request):
+    user = request.user
+    doctor = Doctor.objects.get(user=user)
+    appointments = Appointment.objects.filter(doctor=doctor)
+    for i in appointments:
+        print(i.patient)
+        print(i.date)
+        print(i.doctor)
+    return render(request, 'users/doctor/doctor_dashboard.html', {'appointments': appointments})

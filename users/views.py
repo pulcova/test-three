@@ -6,7 +6,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete, pre_delete
 from django.dispatch import receiver
-
+from django.template import TemplateDoesNotExist
+from django.http import HttpResponse 
+from django.shortcuts import get_object_or_404
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import CreateUserForm, PatientUpdateForm, StaffUpdateForm, DoctorUpdateForm
@@ -126,10 +128,11 @@ def doctorDashboard(request):
 @allowed_users(allowed_roles=['doctor'])
 def staffList(request):
     staff = Staff.objects.all()
+    return render(request, 'users/doctor/doctor_staff_list.html', {'staff': staff})
 
-    context = {'staff': staff}
-    return render(request, 'users/doctor/doctor_staff_list.html', context)
-
+def staffDetailView(request, staff_id):
+    staff_details = Staff.objects.get(id=staff_id)
+    return render(request, 'users/doctor/staff_profile_view.html', {'staff_detail': staff_details})
 
 # Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
@@ -299,3 +302,4 @@ def update_slot_on_patient_delete(sender, instance, **kwargs):
     for slot in instance.slot_set.all():
         slot.is_available = True
         slot.save()
+
