@@ -2,6 +2,8 @@ from django.db import models
 from users.models import Doctor, Patient, Staff
 from datetime import timedelta, date
 from django.core.mail import send_mail
+from django.conf import settings
+from datetime import datetime, timedelta
 
 class Appointment(models.Model):
     STATUS_CHOICES = (
@@ -35,21 +37,24 @@ class Appointment(models.Model):
     details_confirmation = models.BooleanField(default=False)
     supporting_document = models.FileField(upload_to='patient_appointment_documents/', null=True, blank=True)
 
-    def schedule_follow_up_reminder(self):
-        reminder_date = self.date_and_time - timedelta(days=45)
-        if reminder_date > date.today():
-            patient_email = self.patient.email
-            subject = "Follow-up Appointment Reminder"
-            message = f"Dear {self.patient.name},\n\nThis is a reminder for your follow-up appointment scheduled on {self.date_and_time.date()}. Please ensure you are available.\n\nRegards,\nThe Clinic"
-            send_mail(subject, message, 'clinic@example.com', [patient_email])
+    def schedule_follow_up(self):
+        if self.date is None or self.start_time is None:
+            raise ValueError("date and start_time cannot be None")
+        date_and_time = datetime.combine(self.date, self.start_time)
+        follow_up_due_date = date_and_time - timedelta(days=45)
+        follow_up = FollowUp.objects.create(appointment=self, due_date=follow_up_due_date)
+        return follow_up
 
     def schedule_block_appointment(self):
-        block_date = self.date_and_time + timedelta(days=30)
-        if block_date > date.today():
+        if self.date is None or self.start_time is None:
+            raise ValueError("date and start_time cannot be None")
+        date_and_time = datetime.combine(self.date, self.start_time)
+        block_date = date_and_time + timedelta(days=30)
+        if block_date.date() > date.today():
             staff_emails = [staff.email for staff in Staff.objects.all()]  
             subject = "Blocked Appointment Notification"
-            message = f"Dear Team,\n\nThis is to inform you that the appointment scheduled on {self.date_and_time.date()} has been blocked. Please take necessary actions.\n\nRegards,\nThe Clinic"
-            send_mail(subject, message, 'clinic@example.com', staff_emails)
+            message = f"Dear Team,\n\nThis is to inform you that the appointment scheduled on {date_and_time.date()} has been blocked. Please take necessary actions.\n\nRegards,\nThe Clinic"
+            send_mail(subject, message, settings.EMAIL_HOST_USER, staff_emails)
 
 class AppointmentException(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
@@ -57,6 +62,10 @@ class AppointmentException(models.Model):
     reason = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+class FollowUp(models.Model):
+    appointment = models.ForeignKey(Appointment, null=True, on_delete=models.CASCADE)
+    due_date = models.DateField(blank=True, null=True)
+    notification_sent = models.BooleanField(default=False)
 
 class Slot(models.Model):
     start_time = models.TimeField(null=True, blank=True)

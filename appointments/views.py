@@ -12,6 +12,7 @@ from .models import Appointment, Slot
 from .forms import PatientAppointmentForm, PatientAppointmentUpdateForm
 from users.decorators import allowed_users
 from datetime import datetime
+# from .tasks import send_test_email
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -113,12 +114,13 @@ def appointment_booking_form(request):
             slot.save()
 
             appointment.save()
-
-            # send_appointment_confirmation_email(appointment)
+            appointment.schedule_follow_up()
+            send_appointment_confirmation_email(appointment)
             return redirect('patient-appointment-success')
         else:
             print("Form is invalid!")  
             print(form.errors) 
+
     return render(request, 'appointments/appointment_booking_form.html', {'form': form})
 
 
