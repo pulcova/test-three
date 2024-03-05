@@ -143,11 +143,21 @@ def patient_calendar_view(request):
     
     return render(request, 'appointments/patient_calendar.html', {'appointments': serialized_appointments})
 
-
 @login_required(login_url='doctor-login')
 @allowed_users(allowed_roles=['doctor'])
 def doctor_calendar_view(request):
-    return render(request, 'appointments/doctor_calendar.html')
+    user = request.user
+    doctor = Doctor.objects.get(user=user)
+    doctor_appointments = Appointment.objects.filter(doctor=doctor, date__isnull=False)
+    
+    serialized_appointments = [{
+        'title': appointment.reason,  
+        'start': datetime.combine(appointment.date, appointment.start_time).strftime('%Y-%m-%dT%H:%M:%S') if appointment.date and appointment.start_time else None,
+        'end': datetime.combine(appointment.date, appointment.end_time).strftime('%Y-%m-%dT%H:%M:%S') if appointment.date and appointment.end_time else None,
+        'patient': appointment.patient,
+    } for appointment in doctor_appointments]
+    
+    return render(request, 'appointments/doctor_calendar.html', {'appointments': serialized_appointments})
 
 @login_required(login_url='staff-login')
 @allowed_users(allowed_roles=['staff'])
@@ -266,8 +276,9 @@ def doctor_appointment_list_view(request):
     user = request.user
     doctor = Doctor.objects.get(user=user)
     appointments = Appointment.objects.filter(doctor=doctor)
-    for i in appointments:
-        print(i.patient)
-        print(i.date)
-        print(i.doctor)
     return render(request, 'users/doctor/doctor_dashboard.html', {'appointments': appointments})
+
+@login_required(login_url='doctor-login')
+def doctor_appointment_detail_view(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    return render(request, 'appointments/doctor_appointment_details.html', {'appointment': appointment})

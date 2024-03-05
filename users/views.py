@@ -95,7 +95,6 @@ def doctorUpdateProfile(request):
     form = DoctorUpdateForm(instance=doctor)
 
     if request.method == 'POST':
-        print(form.errors)
         form = DoctorUpdateForm(request.POST, request.FILES, instance=doctor)
         if form.is_valid():
             form.save()

@@ -51,9 +51,9 @@
           </div>
 
           <div class="sm:col-span-2">
-            <label for="gender" class="block text-sm font-medium leading-6 text-gray-900">Gender</label>
+            <label for="id_gender" class="block text-sm font-medium leading-6 text-gray-900">Gender</label>
             <div class="mt-2">
-                <select name="gender" id="gender" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">
+                <select name="gender" id="id_gender" class="block flex-1 border border-gray-300 bg-white py-1.5 pl-3 pr-12 text-gray-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:leading-6">
                     <option value="M" {% if patient.gender == "M" %} selected {% endif %}>Male</option>
                     <option value="F" {% if patient.gender == "F" %} selected {% endif %}>Female</option>
                     <option value="O" {% if patient.gender == "O" %} selected {% endif %}>Other</option>

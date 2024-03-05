@@ -22,7 +22,7 @@
         <tbody>
           {% for user in staff %}
           <tr>
-            <td scope="row" class="flex items-center px-4 py-3 text-gray-900 whitespace-nowrap dark:text-white">
+            <td scope="row" class="flex items-center px-4 py-3 text-gray-900 whitespace-nowrap">
               {% if user.profile_picture %}
                   <img src="{{ user.profile_picture.url }}" alt="Profile Picture" 
                       class="w-10 h-10 rounded-full mr-4 object-cover">

@@ -3,19 +3,30 @@
 <head>
   <title>VitiGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-
-    </script>
 </head>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOMContentLoaded event fired");
+    var calendarEl = document.getElementById('calendar');
+    console.log("calendarEl:", calendarEl);
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: [
+        // Serialized appointments data
+        {% for appointment in appointments %}
+          {
+            title: '{{ appointment.patient }}',
+            start: '{{ appointment.start }}',
+          },
+        {% endfor %}
+      ]
+    });
+    console.log("calendar object:", calendar);
+    calendar.render();
+    console.log("Calendar rendered");
+  });
+</script>
 <body>
     {% include 'users/doctor/doctor_navbar.html' %}
     {% block content %}

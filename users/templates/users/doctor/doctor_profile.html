@@ -48,8 +48,12 @@
                       </li>
                       <li class="flex items-center py-3">
                           <span>Member since</span>
-                          <span class="ml-auto">Nov 07, 2016</span>
+                          <span class="ml-auto">{{ request.user.date_joined }}</span>
                       </li>
+                      <li class="flex items-center py-3">
+                        <span>Last Login</span>
+                        <span class="ml-auto">{{ request.user.last_login }}</span>
+                    </li>
                   </ul>
                   <div class="mt-4 flex justify-between">
                     <a href="{% url 'doctor-update-profile' %}"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Edit Profile</button></a>
