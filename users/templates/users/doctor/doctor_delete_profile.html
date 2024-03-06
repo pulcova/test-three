@@ -2,30 +2,33 @@
 {% load static %}
 {% block content %}
 
-<section class="text-gray-600 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
-      <div class="lg:w-4/5 mx-auto flex flex-wrap">
-        <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-          <h2 class="text-sm title-font text-gray-500 tracking-widest">Doctor</h2>
-          <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ doctor.name|default:request.user }}</h1>
-          <div class="flex mb-4">
-            <a href="{% url 'doctor-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Details</a>
-            <a href="{% url 'doctor-update-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Update</a>
-            <a href="#" class="flex-grow text-indigo-500 border-indigo-500 border-b-2 py-2 text-lg px-1">Delete</a>
-
-          </div>
-          <h1 class="text-2xl font-bold mb-4">Delete Profile</h1>
-            <p class="text-gray-700 mb-4">Are you sure you want to delete your profile? This action cannot be undone.</p>
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 
-                rounded focus:outline-none focus:shadow-outline">Yes, Delete My Profile</button>
-                <a href="{% url 'staff-profile' %}" class="text-gray-600 ml-4 hover:underline">Cancel</a>
-            </form>
-        </div>
-        {% include 'users/doctor/doctor_profile_picture.html' %}
+<div class="container mx-auto max-w-md p-6 mt-32"> 
+  <form action="" method="post">
+      {% csrf_token %}
+      <h1 class="text-2xl font-bold mb-4 text-center">Delete Profile</h1>
+      <div class="bg-gray-100 p-4 mb-4 rounded flex justify-center items-center">
+        {% if request.user.doctor.profile_picture %}
+              <img src="{{ request.user.doctor.profile_picture.url }}" alt="Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+        {% else %}
+              <img src="{% static 'images/profile.png' %}" alt="Default Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+        {% endif %}
+        <p class="mb-2">Doctor Name: {{ doctor.name }}</p>
       </div>
-    </div>
-  </section>
+      <p class="text-red-500 text-center mb-6">
+        WARNING: This action is permanent and cannot be undone.
+      </p>      
+      <p class="text-red-500 mb-4 text-center"> Are you sure you want to delete ypur profile?</p>
+      <div class="flex justify-center">
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 mr-2 rounded">
+              Delete
+          </button>
+          <a href="{% url 'doctor-profile' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+              Cancel
+          </a>
+      </div>
+  </form>
+</div>
 
 {% endblock %}

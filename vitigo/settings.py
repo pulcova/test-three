@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,9 +41,15 @@ INSTALLED_APPS = [
     'users',
     'appointments',
     'docs',
+    'query',
+    'celery',
+    'django_celery_beat',
+    'redis',
+    'honeybadger',
 ]
 
 MIDDLEWARE = [
+    'honeybadger.contrib.DjangoHoneybadgerMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -130,8 +137,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ps4798214@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'postmaster@pulcova.social'
+EMAIL_HOST_PASSWORD = '9d6687f27d5cd1ba8b88680f1cc9f57b-2c441066-f183a652'
+
+MAILGUN_DOMAIN = 'pulcova.social'
+MAILGUN_API_KEY = 'c1717ab89d0cb0e164e38ffc84b8ca75-2c441066-175b84ed' 
+
+
+HONEYBADGER = {
+  'API_KEY': 'hbp_lhjHUpBlsv4AqWvz3Pl9F1VOfx59Lh0nxU8h'
+}

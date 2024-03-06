@@ -1,0 +1,68 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+<div class="mt-20">
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold mb-4">Appointment Details</h2>
+      
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block font-medium mb-1">Patient Name:</label>
+            <p class="text-gray-700">{{ appointment.patient.name }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Patient Email:</label>
+            <p class="text-gray-700">{{ appointment.patient.email }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Doctor Name:</label>
+            <p class="text-gray-700">{{ appointment.doctor.name }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Doctor Email:</label>
+            <p class="text-gray-700">{{ appointment.doctor.email }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Date:</label>
+            <p class="text-gray-700">{{ appointment.date }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Start Time:</label>
+            <p class="text-gray-700">{{ appointment.start_time }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">End Time:</label>
+            <p class="text-gray-700">{{ appointment.end_time }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Clinic Address:</label>
+            <p class="text-gray-700">123 Main Street, Kolkata, West Bengal</p>
+          </div>
+          <div class="col-span-2">
+            <label class="block font-medium mb-1">Reason:</label>
+            {{ appointment.reason }}
+          </div>
+          <div class="col-span-2">
+            <label class="block font-medium mb-1">Notes:</label>
+            {{ appointment.notes }}
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Created At:</label>
+            <p class="text-gray-700">{{ appointment.created_at }}</p>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Status:</label>
+            <span class="px-3 py-1 rounded-full bg-green-100 text-green-800">{{ appointment.status }}</span>
+          </div>
+          <div class="col-span-2">
+            <label class="block font-medium mb-1">Supporting Document:</label>
+            {% if appointment.supporting_document %}
+              <a href="{{ appointment.supporting_document.url }}" target="_blank" class="text-blue-500 hover:underline">{{ appointment.supporting_document.name }}</a>
+            {% else %}
+              <p class="text-gray-700">No supporting document uploaded</p>
+            {% endif %}
+          </div>
+      </div>   
+</div>
+</div>
+{% endblock %}

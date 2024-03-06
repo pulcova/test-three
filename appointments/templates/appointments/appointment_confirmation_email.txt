@@ -1,0 +1,8 @@
+Dear {{ patient.name }},
+
+Your appointment with Dr. {{ doctor.name }} on {{ appointment.date }} at {{ appointment.start_time }} has been confirmed.
+
+If you have any questions, please contact us.
+
+Regards,
+VitiGo

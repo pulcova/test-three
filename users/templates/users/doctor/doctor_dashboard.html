@@ -1,4 +1,5 @@
 {% extends 'users/doctor/doctor_base.html' %}
+{% load static %}
 {% block content %}
 <section class="text-gray-600 body-font">
     <div class="container px-5 py-24 mx-auto">
@@ -12,53 +13,39 @@
             <tr>
               <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Patient Name</th>
               <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Appointment Date</th>
-              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Appointment Time</th>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Start Time</th>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">End Time</th>
               <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Mode</th>
-              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Reason</th>
-              <th class="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
+              <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Action</th>
             </tr>
           </thead>
           <tbody>
+            {% for appointment in appointments %}
             <tr>
-              <td class="px-4 py-3">John Doe</td>
-              <td class="px-4 py-3">2024-02-21</td>
-              <td class="px-4 py-3">10:00 AM</td>
-              <td class="px-4 py-3">Virtual</td>
-              <td class="px-4 py-3">Follow-up</td>
-              <td class="w-10 text-center">
-                <input name="appointment" type="radio">
+              <td scope="row" class="flex items-center px-4 py-3 text-gray-900 whitespace-nowrap">
+                {% if appointment.patient.profile_picture %}
+                    <img src="{{ appointment.patient.profile_picture.url }}" alt="Profile Picture" 
+                        class="w-10 h-10 rounded-full mr-4 object-cover">
+                {% else %}
+                    <img src="{% static 'images/profile.png' %}" alt="Default Profile Picture" 
+                        class="w-20 h-20 rounded-full mr-4 object-cover">
+                {% endif %}
+                <div class="ps-3">
+                    <div class="text-base font-semibold">{{ appointment.patient }}</div>
+                </div>  
               </td>
+              <td class="px-4 py-3">{{ appointment.date }}</td>
+              <td class="px-4 py-3">{{ appointment.start_time }}</td>
+              <td class="px-4 py-3">{{ appointment.end_time }}</td>
+              <td class="px-4 py-3">{{ appointment.mode }}</td>
+              <td class="px-4 py-3">
+                <a href="{% url 'appointment-detail-view' appointment.id  %}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
+                </svg>
+              </a>
             </tr>
-            <tr>
-              <td class="px-4 py-3">Jane Smith</td>
-              <td class="px-4 py-3">2024-02-22</td>
-              <td class="px-4 py-3">02:30 PM</td>
-              <td class="px-4 py-3">Physical</td>
-              <td class="px-4 py-3">Check-up</td>
-              <td class="w-10 text-center">
-                <input name="appointment" type="radio">
-              </td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">Michael Johnson</td>
-              <td class="px-4 py-3">2024-02-23</td>
-              <td class="px-4 py-3">11:15 AM</td>
-              <td class="px-4 py-3">Virtual</td>
-              <td class="px-4 py-3">Consultation</td>
-              <td class="w-10 text-center">
-                <input name="appointment" type="radio">
-              </td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">Emily Brown</td>
-              <td class="px-4 py-3">2024-02-24</td>
-              <td class="px-4 py-3">03:00 PM</td>
-              <td class="px-4 py-3">Physical</td>
-              <td class="px-4 py-3">Treatment</td>
-              <td class="w-10 text-center">
-                <input name="appointment" type="radio">
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

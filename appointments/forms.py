@@ -4,7 +4,12 @@ from .models import Appointment, AppointmentException
 class PatientAppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['patient', 'doctor', 'date_and_time', 'reason', 'notes', 'mode', 'details_confirmation']
+        fields = ['patient', 'doctor', 'start_time', 'end_time', 'date', 'mode', 'reason', 'notes', 'supporting_document', 'details_confirmation']
+
+class PatientAppointmentUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['patient', 'doctor', 'start_time', 'end_time', 'date', 'mode', 'reason', 'notes', 'details_confirmation']
 
 class AppointmentExceptionForm(forms.ModelForm):
     class Meta:

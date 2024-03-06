@@ -1,0 +1,35 @@
+{% extends 'users/doctor/doctor_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mx-auto mt-32 p-6">
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-bold mb-4">Staff Profile</h2>
+  
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Name:</label>
+          <p class="text-gray-900 font-normal">{{ staff_detail.name }}</p>
+        </div>
+  
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Email:</label>
+          <p class="text-gray-900 font-normal">{{ staff_detail.email }}</p>
+        </div>
+  
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Phone:</label>
+          <p class="text-gray-900 font-normal">{{ staff_detail.phone }}</p>
+        </div>
+  
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Role:</label>
+          <p class="text-gray-900 font-normal">{{ staff_detail.role }}</p>
+        </div>
+  
+        </div>
+    </div>
+  </div>
+  
+
+{% endblock %}

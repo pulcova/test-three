@@ -2,37 +2,87 @@
 {% load static %}
 {% block content %}
 
-<section class="text-gray-600 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
-      <div class="lg:w-4/5 mx-auto flex flex-wrap">
-        <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-          <h2 class="text-sm title-font text-gray-500 tracking-widest">Patient</h2>
-          <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ patient.name|default:request.user }}</h1>
-          <div class="flex mb-4">
-            <a class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1">Details</a>
-            <a href="{% url 'patient-update-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Update</a>
-            <a href="{% url 'patient-delete-profile' %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Delete</a>
-          </div>
-          <div class="flex border-t border-gray-200 py-2">
-            <span class="text-gray-500">Username</span>
-            <span class="ml-auto text-gray-900">{{ request.user }}</span>
-          </div>
-          <div class="flex border-t border-gray-200 py-2">
-            <span class="text-gray-500">Name</span>
-            <span class="ml-auto text-gray-900">{{ patient.name }}</span>
-          </div>
-          <div class="flex border-t border-gray-200 py-2">
-            <span class="text-gray-500">Email</span>
-            <span class="ml-auto text-gray-900">{{ patient.email }}</span>
-          </div>
-          <div class="flex border-t border-b mb-6 border-gray-200 py-2">
-            <span class="text-gray-500">Phone</span>
-            <span class="ml-auto text-gray-900">{{ patient.phone }}</span>
-          </div>
+<div class="container mx-auto mt-36 p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Patient Profile</h1>
+    <div class="flex space-x-4">
+      <a href="{% url 'patient-update-profile' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+      <a href="{% url 'patient-delete-profile' %}"><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button></a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white shadow-md rounded-md p-4">
+      <div class="flex items-center mb-4">
+          {% if request.user.patient.profile_picture %}
+              <img src="{{ request.user.patient.profile_picture.url }}" alt="Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+          {% else %}
+              <img src="{% static 'images/profile.png' %}" alt="Default Profile Picture" 
+                  class="w-20 h-20 rounded-full mr-4 object-cover">
+          {% endif %}
+        <div>
+          <h2 class="text-lg font-semibold" id="id_name">{{ patient.name }}</h2>
+          <p id="id_email">{{ patient.email }}</p>
+          <p id="id_phone">{{ patient.phone }}</p>
         </div>
-        {% include 'users/patient/patient_profile_picture.html' %}
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label for="id_date_of_birth">Date of Birth:</label>
+          <p id="id_date_of_birth">{{ patient.date_of_birth }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_gender">Gender:</label>
+          <p id="id_gender">{{ patient.gender }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_address">Address:</label>
+          <p id="id_address">{{ patient.address }}</p>
+        </div>
       </div>
     </div>
-  </section>
 
+    <div class="bg-white shadow-md rounded-md p-4">
+      <h3 class="text-lg font-semibold mb-4">Medical Details</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label for="id_blood_group">Blood Group:</label>
+          <p id="id_blood_group">{{ patient.blood_group }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_weight">Weight:</label>
+          <p id="id_weight">{{ patient.weight }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_height">Height:</label>
+          <p id="id_height">{{ patient.height }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_allergies">Allergies:</label>
+          <p id="id_allergies">{{ patient.allergies }}</p>
+        </div>
+        <div class="form-group">
+          <label for="id_medical_history">Medical History:</label>
+          <p id="id_medical-history">{{ patient.medical_history }}</p> 
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white shadow-md rounded-md p-4 col-span-2"> 
+      <h3 class="text-lg font-semibold mb-4">Emergency Contact</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label for="id_emergency_contact_name">Name:</label>
+          <p id="id_emergency_contact_name">{{ patient.emergency_contact_name }}</p> 
+        </div>
+        <div class="form-group">
+          <label for="id_emergency_contact_phone">Phone:</label>
+          <p id="id_emergency_contact_phone">{{ patient.emergency_contact_phone }}</p>  
+        </div>
+      </div>
+    </div> 
+  </div> 
+</div>
 {% endblock %}

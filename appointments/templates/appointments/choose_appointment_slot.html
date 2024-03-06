@@ -1,0 +1,56 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center h-screen">
+  <div class="w-3/4 max-w-lg bg-white rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-semibold mb-4">Choose Appointment Slot</h2>
+  
+    <form method="POST" class="mb-6">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label for="doctor" class="block text-sm font-semibold mb-2">Select Doctor:</label>
+        <select name="doctor" id="doctor" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" {% if not selected_doctor %} selected {% endif %}>Choose a Doctor</option>
+          {% for doc in doctors %}
+              <option value="{{ doc.id }}" {% if selected_doctor and doc.id == selected_doctor.id %} selected {% endif %}>{{ doc.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="mb-4">
+        <label for="date" class="block text-sm font-semibold mb-2">Select Date:</label>
+        <input type="date" id="date" name="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+      </div>
+      
+      <button type="submit" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Select Doctor</button>
+    </form>
+
+    {% if selected_doctor %}
+      <h3 class="text-lg font-semibold mb-4">Available Slots for {{ selected_doctor.name }}:</h3>
+      {% if slots %}
+        {% regroup slots by date as slot_dates %}
+        {% for slot_date in slot_dates %}
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold mb-2">{{ slot_date.grouper }}</h4>
+            <div class="flex flex-wrap gap-4">
+              {% for slot in slot_date.list %}
+                <form method="GET" action="{% url 'appointment-booking-form' %}">
+                  <input type="hidden" name="start_time" value="{{ slot.start_time }}">
+                  <input type="hidden" name="end_time" value="{{ slot.end_time }}">
+                  <input type="hidden" name="date" value="{{ slot.date }}">
+                  <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">
+                  <button type="submit" class="py-1 px-4 text-sm font-semibold rounded-full {% if not slot.is_available or slot.patient %}bg-red-500 text-white cursor-not-allowed{% else %}bg-green-500 text-white hover:bg-green-600 focus:ring-green-600{% endif %} border focus:outline-none focus:ring-2 focus:ring-offset-2" {% if not slot.is_available or slot.patient %}disabled{% endif %}>
+                    {{ slot.start_time }} - {{ slot.end_time }}
+                  </button>
+                </form>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No slots available.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

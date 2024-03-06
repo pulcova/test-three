@@ -18,16 +18,9 @@ def docs_dashboard(request):
     patient = get_object_or_404(Patient, user=user)
 
     patient_bills = PatientBills.objects.filter(patient=patient)
-    patient_bills = [{'bill': os.path.basename(bill.bill.name), 'date': bill.date} for bill in patient_bills]
-    
     patient_prescriptions = PatientPrescription.objects.filter(patient=patient)
-    patient_prescriptions = [{'prescription': os.path.basename(prescription.prescription.name), 'date': prescription.date} for prescription in patient_prescriptions]
-    
     patient_reports = PatientReport.objects.filter(patient=patient)
-    patient_reports = [{'report': os.path.basename(report.report.name), 'date': report.date} for report in patient_reports]
-    
     patient_vaccinations = PatientVaccination.objects.filter(patient=patient)
-    patient_vaccinations = [{'vaccine': os.path.basename(vaccine.vaccine.name), 'date': vaccine.date} for vaccine in patient_vaccinations]
     
     context = {
         'patient': patient,
@@ -66,6 +59,7 @@ def upload_report(request):
             report = form.save(commit=False)
             report.patient = request.user.patient
             report.save()
+            print(report.report.url)
             return redirect('select_upload_category')
     else:
         form = PatientReportForm()
@@ -98,3 +92,95 @@ def upload_vaccination(request):
     else:
         form = PatientVaccinationForm()
     return render(request, 'docs/upload_vaccination.html', {'form': form})
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def view_prescription(request, prescription_id):
+    print(prescription_id)
+    prescription = get_object_or_404(PatientPrescription, pk=prescription_id)
+
+    response = FileResponse(prescription.prescription.file)
+    return response
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def view_bill(request, bill_id):
+    print(bill_id)
+    prescription = get_object_or_404(PatientPrescription, pk=bill_id)
+
+    response = FileResponse(prescription.prescription.file)
+    return response
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def view_report(request, report_id):
+    print(report_id)
+    report = get_object_or_404(PatientReport, pk=report_id)
+
+    response = FileResponse(report.report.file)
+    return response
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def view_vaccination(request, vaccination_id):
+    print(vaccination_id)
+    vaccination = get_object_or_404(PatientVaccination, pk=vaccination_id)
+
+    response = FileResponse(vaccination.vaccine.file)
+    return response
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])
+def delete_prescription(request, prescription_id):
+    if request.method == 'POST':
+        prescription = get_object_or_404(PatientPrescription, pk=prescription_id)
+        if prescription.patient == request.user.patient:  
+            prescription.delete() 
+            return redirect('docs_dashboard') 
+        else:
+            messages.error(request, 'You do not have permission to delete this prescription.')
+            return redirect('docs_dashboard')
+    else:
+        return redirect('docs_dashboard') 
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])   
+def delete_bill(request, bill_id):
+    if request.method == 'POST':
+        bill = get_object_or_404(PatientBills, pk=bill_id)
+        if bill.patient == request.user.patient:  
+            bill.delete() 
+            return redirect('docs_dashboard') 
+        else:
+            messages.error(request, 'You do not have permission to delete this bill.')
+            return redirect('docs_dashboard')
+    else:
+        return redirect('docs_dashboard')
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])   
+def delete_report(request, report_id):
+    if request.method == 'POST':
+        report = get_object_or_404(PatientReport, pk=report_id)
+        if report.patient == request.user.patient:  
+            report.delete() 
+            return redirect('docs_dashboard') 
+        else:
+            messages.error(request, 'You do not have permission to delete this report.')
+            return redirect('docs_dashboard')
+    else:
+        return redirect('docs_dashboard')
+
+@login_required(login_url='patient-login')
+@allowed_users(allowed_roles=['patient'])   
+def delete_vaccination(request, vaccination_id):
+    if request.method == 'POST':
+        vaccination = get_object_or_404(PatientVaccination, pk=vaccination_id)
+        if vaccination.patient == request.user.patient:  
+            vaccination.delete() 
+            return redirect('docs_dashboard') 
+        else:
+            messages.error(request, 'You do not have permission to delete this vaccination record.')
+            return redirect('docs_dashboard')
+    else:
+        return redirect('docs_dashboard')

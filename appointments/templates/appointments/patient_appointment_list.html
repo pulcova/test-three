@@ -13,10 +13,13 @@
                                 Doctor
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                Date & Time
+                                Start Time
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                Created at
+                                End Time
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Date
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
                                 Mode
@@ -25,7 +28,7 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                More Details
+                                Actions
                             </th>
                         </tr>
                     </thead>
@@ -35,17 +38,29 @@
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <p class="text-gray-900 font-semibold">{{ appointment.doctor.name }}</p>
                             </td>
+
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div>
-                                        <p class="text-gray-900 font-semibold">{{ appointment.date_and_time|date:"F d, Y" }}</p>
-                                        <p class="text-gray-500">{{ appointment.date_and_time|date:"h:i A" }}</p>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.start_time }}</p>
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
-                                <p class="text-gray-900">{{ appointment.created_at|date:"d/m/Y" }}</p>
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.end_time }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ appointment.date }}</p>
+                                    </div>
+                                </div>
                             </td>
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-gray-900">
@@ -72,12 +87,22 @@
                             </td>
                             <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
                                 <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-black-900">
-                                    <span class="relative">
-                                       <a href="#">
+                                    <span class="relative flex">
+                                       <a href="{% url 'patient-appointment-details' appointment_id=appointment.id  %}" title="View Appointment Details">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
                                           </svg>                                            
-                                        </a>                                       
+                                        </a> 
+                                        <a href="#" title="Reschedule Appointment">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                                <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+                                              </svg>        
+                                        </a>        
+                                            <a href="{% url 'cancel-appointment' appointment_id=appointment.id %}" title="Delete/Cancel Appointment">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+                                                  </svg>                                              
+                                            </a>                             
                                     </span>
                                 </span>
                             </td>

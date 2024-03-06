@@ -4,7 +4,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
-
+from django.db.models.signals import post_delete, pre_delete
+from django.dispatch import receiver
+from django.template import TemplateDoesNotExist
+from django.http import HttpResponse 
+from django.shortcuts import get_object_or_404
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import CreateUserForm, PatientUpdateForm, StaffUpdateForm, DoctorUpdateForm
@@ -77,7 +81,11 @@ def doctorLogout(request):
 @allowed_users(allowed_roles=['doctor'])
 def doctorProfile(request):
     doctor = Doctor.objects.get(user=request.user)
-    context = {'doctor': doctor}
+
+    full_name = doctor.name
+    first_name, last_name = full_name.split(" ")
+
+    context = {'doctor': doctor, 'first_name': first_name, 'last_name': last_name}
     return render(request, 'users/doctor/doctor_profile.html', context)
 
 @login_required(login_url='doctor-login')
@@ -119,10 +127,11 @@ def doctorDashboard(request):
 @allowed_users(allowed_roles=['doctor'])
 def staffList(request):
     staff = Staff.objects.all()
+    return render(request, 'users/doctor/doctor_staff_list.html', {'staff': staff})
 
-    context = {'staff': staff}
-    return render(request, 'users/doctor/doctor_staff_list.html', context)
-
+def staffDetailView(request, staff_id):
+    staff_details = Staff.objects.get(id=staff_id)
+    return render(request, 'users/doctor/staff_profile_view.html', {'staff_detail': staff_details})
 
 # Patient login, signup, dashboard, profile, update profile, delete profile
 def patientLogin(request):
@@ -147,7 +156,12 @@ def patientSignup(request):
             user = form.save()
             group = Group.objects.get(name='patient')
             user.groups.add(group)
-            Patient.objects.create( user=user )
+
+            Patient.objects.create(
+                user=user,
+                name=form.cleaned_data['username'], 
+                email=form.cleaned_data['email'],
+            )
             return redirect('patient-login')
 
     context = {'form': form}
@@ -182,6 +196,7 @@ def patientUpdateProfile(request):
     
     if request.method == 'POST':
         form = PatientUpdateForm(request.POST, request.FILES, instance=patient)
+        print(form.errors)  
         if form.is_valid():
             form.save()
             return redirect('patient-profile')
@@ -236,7 +251,11 @@ def staffDashboard(request):
 @allowed_users(allowed_roles=['staff'])
 def staffProfile(request):
     staff = Staff.objects.get(user=request.user)
-    context = {'staff': staff}
+
+    full_name = staff.name
+    first_name, last_name = full_name.split(" ")
+
+    context = {'staff': staff, 'first_name': first_name, 'last_name': last_name}
     return render(request, 'users/staff/staff_profile.html', context)
 
 @login_required(login_url='staff-login')
@@ -277,3 +296,11 @@ def staffDashboard(request):
 
 def redirect_to_docs_dashboard(request):
     return redirect('docs_dashboard')
+
+
+@receiver(pre_delete, sender=Patient)
+def update_slot_on_patient_delete(sender, instance, **kwargs):
+    for slot in instance.slot_set.all():
+        slot.is_available = True
+        slot.save()
+

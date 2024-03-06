@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 
 from . import views
+from appointments.views import doctor_appointment_list_view, doctor_appointment_detail_view
 
 urlpatterns = [
     # Landing page
@@ -18,11 +19,13 @@ urlpatterns = [
     # Doctor login, signup, dashboard, staff-list
     path('doctor/login/', views.doctorLogin, name='doctor-login'),
     path('doctor/logout/', views.doctorLogout, name='doctor-logout'),
-    path('doctor/', views.doctorDashboard, name='doctor-dashboard'),
+    path('doctor/', doctor_appointment_list_view, name='doctor-dashboard'),
     path('doctor/profile/', views.doctorProfile, name='doctor-profile'),
     path('doctor/update-profile/', views.doctorUpdateProfile, name='doctor-update-profile'),
     path('doctor/delete-profile/', views.doctorDeleteProfile, name='doctor-delete-profile'),
     path('doctor/staff-list', views.staffList, name='doctor-staff-list'),
+    path('doctor/staff-profile-view/<int:staff_id>/', views.staffDetailView, name='staff-profile-view'),
+    path('doctor/appointment-detail-view/<int:appointment_id>/', doctor_appointment_detail_view, name='appointment-detail-view'),
 
     # Patient login, signup, dashboard, guidelines
     path('patient/login/', views.patientLogin, name='patient-login'),
@@ -51,4 +54,5 @@ urlpatterns = [
 
 
     path('health-records/', views.redirect_to_docs_dashboard, name='health_records'),
+
 ]
