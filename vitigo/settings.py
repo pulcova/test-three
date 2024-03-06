@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'celery',
     'django_celery_beat',
     'redis',
+    'honeybadger',
 ]
 
 MIDDLEWARE = [
+    'honeybadger.contrib.DjangoHoneybadgerMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -143,3 +145,8 @@ EMAIL_HOST_PASSWORD = '9d6687f27d5cd1ba8b88680f1cc9f57b-2c441066-f183a652'
 
 MAILGUN_DOMAIN = 'pulcova.social'
 MAILGUN_API_KEY = 'c1717ab89d0cb0e164e38ffc84b8ca75-2c441066-175b84ed' 
+
+
+HONEYBADGER = {
+  'API_KEY': 'hbp_lhjHUpBlsv4AqWvz3Pl9F1VOfx59Lh0nxU8h'
+}

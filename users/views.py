@@ -196,7 +196,7 @@ def patientUpdateProfile(request):
     
     if request.method == 'POST':
         form = PatientUpdateForm(request.POST, request.FILES, instance=patient)
-        print(form.errors)  # print form errors for debugging
+        print(form.errors)  
         if form.is_valid():
             form.save()
             return redirect('patient-profile')
@@ -225,8 +225,6 @@ def patientDashboard(request):
     return render(request, 'users/patient/patient_dashboard.html', context)
 
 # Staff login, signup, dashboard, profile, update profile, delete profile
-@login_required(login_url='staff-login')
-@allowed_users(allowed_roles=['staff'])
 def staffLogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -253,7 +251,11 @@ def staffDashboard(request):
 @allowed_users(allowed_roles=['staff'])
 def staffProfile(request):
     staff = Staff.objects.get(user=request.user)
-    context = {'staff': staff}
+
+    full_name = staff.name
+    first_name, last_name = full_name.split(" ")
+
+    context = {'staff': staff, 'first_name': first_name, 'last_name': last_name}
     return render(request, 'users/staff/staff_profile.html', context)
 
 @login_required(login_url='staff-login')

@@ -15,7 +15,7 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour=5, minute=0), 
     },
     'reset-notification-sent-flag-every-24-hours': {
-        'task': 'yourapp.tasks.reset_notification_sent_flag',
+        'task': 'appointments.tasks.reset_notification_sent_flag',
         'schedule': crontab(hour=0, minute=0), 
     },
 }

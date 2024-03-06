@@ -27,9 +27,6 @@ urlpatterns = [
     path('doctor/staff-profile-view/<int:staff_id>/', views.staffDetailView, name='staff-profile-view'),
     path('doctor/appointment-detail-view/<int:appointment_id>/', doctor_appointment_detail_view, name='appointment-detail-view'),
 
-
-
-
     # Patient login, signup, dashboard, guidelines
     path('patient/login/', views.patientLogin, name='patient-login'),
     path('patient/signup/', views.patientSignup, name='patient-signup'),
