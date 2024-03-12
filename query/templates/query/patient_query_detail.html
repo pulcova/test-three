@@ -1,0 +1,49 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto mt-32 p-8">
+    <h1 class="text-3xl font-bold mb-4">Query Details</h1>
+    <div class="border rounded-lg p-6 bg-white shadow-lg">
+        <div class="grid grid-cols-2 gap-x-4">
+            <div>
+                <h2 class="text-xl font-semibold mb-2">Query Information</h2>
+                <p><span class="font-semibold">Channel:</span> {{ query.channel }}</p>
+                <p><span class="font-semibold">Text:</span> {{ query.text }}</p>
+                <p><span class="font-semibold">Category:</span> {{ query.category }}</p>
+                <p><span class="font-semibold">Priority:</span> {{ query.priority }}</p>
+                <p><span class="font-semibold">Status:</span> {{ query.status }}</p>
+                <p><span class="font-semibold">Color Code:</span> {{ query.get_color_code_display }}</p>
+                <p><span class="font-semibold">Assigned Staff:</span> 
+                    {% for staff in query.assigned_staff.all %}
+                        {{ staff.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p><span class="font-semibold">Patient:</span> {{ query.patient }}</p>
+                <p><span class="font-semibold">Doctor:</span> {{ query.doctor }}</p>
+                <p><span class="font-semibold">Created At:</span> {{ query.created_at }}</p>
+                <p><span class="font-semibold">Updated At:</span> {{ query.updated_at }}</p>
+                <p><span class="font-semibold">Source Details:</span> {{ query.source_details }}</p>
+                <p><span class="font-semibold">IVR Option:</span> {{ query.ivr_option }}</p>
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold mb-2">Resolution Information</h2>
+                {% if resolution %}
+                    <p><span class="font-semibold">Resolution Notes:</span> {{ resolution.resolution_notes }}</p>
+                    <p><span class="font-semibold">Resolution Time:</span> {{ resolution.resolution_time }}</p>
+                {% else %}
+                    <p>No resolution available.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-4">
+            <h2 class="text-xl font-semibold mb-2">Additional Details</h2>
+            <p><span class="font-semibold">Notes:</span> {{ query.notes }}</p>
+            {% if query.supporting_document %}
+                <p><span class="font-semibold">Supporting Document:</span> <a href="{{ query.supporting_document.url }}">Download</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

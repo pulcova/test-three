@@ -1,0 +1,63 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto mt-32 p-8">
+    <h1 class="text-3xl font-bold mb-4">Query Details</h1>
+    <div class="border rounded-lg p-6 bg-white shadow-lg">
+        <div class="grid grid-cols-2 gap-x-4">
+            <div>
+                <h2 class="text-xl font-semibold mb-2">Query Information</h2>
+                <p><span class="font-semibold">Channel:</span> {{ query.channel }}</p>
+                <p><span class="font-semibold">Text:</span> {{ query.text }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ change_category_form.as_p }}
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Change Category</button>
+                </form>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ change_priority_form.as_p }}
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Change Priority</button>
+                </form>
+                <p><span class="font-semibold">Status:</span> {{ query.status }}</p>
+                <p><span class="font-semibold">Color Code:</span> {{ query.get_color_code_display }}</p>
+                <p><span class="font-semibold">Assigned Staff:</span> 
+                    {% for staff in query.assigned_staff.all %}
+                        {{ staff.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p><span class="font-semibold">Patient:</span> {{ query.patient }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ assign_doctor_form.as_p }}
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Assign Doctor</button>
+                </form>
+                <p><span class="font-semibold">Created At:</span> {{ query.created_at }}</p>
+                <p><span class="font-semibold">Updated At:</span> {{ query.updated_at }}</p>
+                <p><span class="font-semibold">Source Details:</span> {{ query.source_details }}</p>
+                <p><span class="font-semibold">IVR Option:</span> {{ query.ivr_option }}</p>
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold mb-2">Resolution Information</h2>
+                {% if resolution %}
+                    <p><span class="font-semibold">Resolution Notes:</span> {{ resolution.resolution_notes }}</p>
+                    <p><span class="font-semibold">Resolution Time:</span> {{ resolution.resolution_time }}</p>
+                {% else %}
+                    <p>No resolution available.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-4">
+            <h2 class="text-xl font-semibold mb-2">Provide Resolution</h2>
+            <form method="POST" class="mb-4">
+                {% csrf_token %}
+                <label for="resolution_notes" class="block mb-2 font-semibold">Resolution Notes:</label>
+                <textarea id="resolution_notes" name="resolution_notes" rows="4" class="w-full px-3 py-2 border rounded-md mb-2"></textarea>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Submit Resolution</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

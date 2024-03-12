@@ -1,0 +1,133 @@
+{% extends 'users/patient/patient_base.html' %}
+{% block content %}
+
+<div class="container max-w-6xl px-4 mx-auto sm:px-8 mt-32">
+    <div class="py-8">
+    <div class="mb-4">
+        <a href="{% url 'patient-raise-query' %}" class="inline-block px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+            Raise Query
+        </a>
+    </div>
+        <div class="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
+            <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
+                <table class="min-w-full leading-normal">
+                    <thead>
+                        <tr>                         
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Query ID
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Date Submitted
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Category
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Priority
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Assigned Staff
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Last Updated
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for query in patient_queries %}
+                        <tr>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <p class="text-gray-900 font-semibold">{{ query.id }}</p>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ query.created_at }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ query.category }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ query.priority }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ query.status }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">
+                                            {% if query.assigned_staff.all %}  
+                                            <ul>
+                                                {% for staff_member in query.assigned_staff.all %}
+                                                <li>{{ staff_member.name }}</li> 
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                            <p>No staff assigned yet.</p>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <div class="flex items-center">
+                                    <div>
+                                        <p class="text-gray-900 font-semibold">{{ query.updated_at }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm bg-white border-b border-gray-200">
+                                <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-black-900">
+                                    <span class="relative flex">
+                                       <a href="{% url 'patient-query-detail' query.id %}" title="View Query Details">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clip-rule="evenodd" />
+                                          </svg>                                            
+                                        </a> 
+                                        <a href="#" title="Edit Query">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                                <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+                                              </svg>        
+                                        </a>        
+                                            <a href="{% url 'patient-query-delete' query.id %}" title="Delete Query">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+                                                  </svg>                                              
+                                            </a>                             
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

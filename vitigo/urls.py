@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('users.urls')),
     path('docs/', include('docs.urls')),
     path('appointments/', include('appointments.urls')),
+    path('queries/', include('query.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

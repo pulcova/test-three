@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.templatetags.static import static
 
+from organization.models import Department, Role
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -77,8 +79,8 @@ class Staff(models.Model):
         ('O', 'Other'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
-    role = models.CharField(max_length=100, null=True, blank=True)
-    department = models.CharField(max_length=100, null=True, blank=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     emergency_contact_name = models.CharField(max_length=100, null=True, blank=True)
     emergency_contact_phone = models.CharField(max_length=15, null=True, blank=True)
     profile_picture = models.ImageField(null=True, blank=True, upload_to='profile_pictures/staff/')

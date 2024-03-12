@@ -1,0 +1,70 @@
+{% extends 'users/patient/patient_base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 py-8 mt-32 max-w-2xl">
+    <h2 class="text-2xl font-bold mb-4">Raise Query</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="text" class="block text-gray-700 font-bold mb-2">Query Description</label>
+            {{ form.text }}
+        </div>
+        <div class="mb-4">
+            <label for="category" class="block text-gray-700 font-bold mb-2">Category</label>
+            {{ form.category }}
+        </div>
+        <div class="mb-4">
+            <label for="priority" class="block text-gray-700 font-bold mb-2">Priority</label>
+            {{ form.priority }}
+        </div>
+        <div class="mb-4">
+            <label for="supporting_document" class="block text-gray-700 font-bold mb-2">Supporting Document</label>
+            {{ form.supporting_document }}
+        </div>
+        <div class="mb-4">
+            <label for="notes" class="block text-gray-700 font-bold mb-2">Additional Notes</label>
+            {{ form.notes }}
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Submit
+        </button>
+    </form>
+</div>
+
+<style>
+    .container {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #cbd5e0;
+        transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #4a90e2;
+    }
+
+    button {
+        cursor: pointer;
+    }
+</style>
+
+{% endblock %}

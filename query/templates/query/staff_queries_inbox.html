@@ -1,0 +1,42 @@
+{% extends 'users/staff/staff_base.html' %}
+{% block content %}
+<div class="container mx-auto mt-32 py-8">
+    <h1 class="text-3xl font-semibold mb-4">Queries Assigned to You</h1>
+
+    {% if queries %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-md">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Channel</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Category</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Priority</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Created At</th>
+                    <th class="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for query in queries %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.id }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.get_channel_display }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.get_category_display }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.get_priority_display }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.get_status_display }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ query.created_at }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                        <a href="{% url 'staff-query-detail' query.id %}" class="text-indigo-600 hover:text-indigo-900">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No queries assigned to you at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
