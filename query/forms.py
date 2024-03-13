@@ -21,9 +21,15 @@ class ResolutionForm(forms.ModelForm):
         fields = ['resolution_notes']
 
 class AssignDoctorForm(forms.ModelForm):
+    doctor = forms.ModelChoiceField(
+        queryset=Doctor.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'})
+    ) 
+
     class Meta:
         model = Query
-        fields = ['doctor']
+        fields = ['doctor']  
+
 
 class ChangePriorityForm(forms.ModelForm):
     class Meta:
@@ -34,3 +40,22 @@ class ChangeCategoryForm(forms.ModelForm):
     class Meta:
         model = Query
         fields = ['category']
+
+class QueryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Query
+        fields = ['status', 'priority', 'doctor']  
+
+
+
+class UpdatePriorityForm(forms.ModelForm):
+    class Meta:
+        model = Query
+        fields = ['priority']
+
+class UpdateStatusForm(forms.ModelForm):
+    class Meta:
+        model = Query
+        fields = ['status']
+
+

@@ -116,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -153,6 +153,7 @@ HONEYBADGER = {
 }
 
 HONEYBADGER_ENVIRONMENT = 'development' 
+HONEYBADGER['FORCE_REPORT_ERRORS'] = True 
 
 LOGGING = {
     'version': 1,

@@ -1,49 +1,93 @@
 {% extends 'users/patient/patient_base.html' %}
 
 {% block content %}
-
-<div class="container mx-auto mt-32 p-8">
-    <h1 class="text-3xl font-bold mb-4">Query Details</h1>
-    <div class="border rounded-lg p-6 bg-white shadow-lg">
-        <div class="grid grid-cols-2 gap-x-4">
-            <div>
-                <h2 class="text-xl font-semibold mb-2">Query Information</h2>
-                <p><span class="font-semibold">Channel:</span> {{ query.channel }}</p>
-                <p><span class="font-semibold">Text:</span> {{ query.text }}</p>
-                <p><span class="font-semibold">Category:</span> {{ query.category }}</p>
-                <p><span class="font-semibold">Priority:</span> {{ query.priority }}</p>
-                <p><span class="font-semibold">Status:</span> {{ query.status }}</p>
-                <p><span class="font-semibold">Color Code:</span> {{ query.get_color_code_display }}</p>
-                <p><span class="font-semibold">Assigned Staff:</span> 
-                    {% for staff in query.assigned_staff.all %}
-                        {{ staff.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </p>
-                <p><span class="font-semibold">Patient:</span> {{ query.patient }}</p>
-                <p><span class="font-semibold">Doctor:</span> {{ query.doctor }}</p>
-                <p><span class="font-semibold">Created At:</span> {{ query.created_at }}</p>
-                <p><span class="font-semibold">Updated At:</span> {{ query.updated_at }}</p>
-                <p><span class="font-semibold">Source Details:</span> {{ query.source_details }}</p>
-                <p><span class="font-semibold">IVR Option:</span> {{ query.ivr_option }}</p>
-            </div>
-            <div>
-                <h2 class="text-xl font-semibold mb-2">Resolution Information</h2>
-                {% if resolution %}
-                    <p><span class="font-semibold">Resolution Notes:</span> {{ resolution.resolution_notes }}</p>
-                    <p><span class="font-semibold">Resolution Time:</span> {{ resolution.resolution_time }}</p>
-                {% else %}
-                    <p>No resolution available.</p>
-                {% endif %}
-            </div>
+  
+<div class="container mx-auto mt-32 py-8">
+    <div class="w-90 mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2">
+            <h1 class="text-lg font-semibold text-gray-800">Query Details:</h1>
+            <h2 class="text-sm xt-gray-600">This is the content of the first box.</h2>
         </div>
-        <div class="mt-4">
-            <h2 class="text-xl font-semibold mb-2">Additional Details</h2>
-            <p><span class="font-semibold">Notes:</span> {{ query.notes }}</p>
-            {% if query.supporting_document %}
-                <p><span class="font-semibold">Supporting Document:</span> <a href="{{ query.supporting_document.url }}">Download</a></p>
-            {% endif %}
+        <div class="px-4 py-2 bg-gray-100"> 
+            <div class="w-full border px-4 py-2">
+                <p>Query description: </p>{{ query.text }}
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Channel: </p>{{ query.channel }}
+                </div>
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Category: </p>{{ query.category }}
+                </div>
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Priority: </p> {% include 'query/colorCodes/priority.html' %}
+                </div>
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Status: </p> {% include 'query/colorCodes/status.html' %}
+                </div>
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Created at: </p>{{ query.created_at }}
+                </div>
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Updated at: </p>{{ query.updated_at }}
+                </div>
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Source details: </p>{{ query.source_details }}
+                </div>
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>IVR Option: </p>{{ query.ivr_option }}
+                </div>
+            </div>
+            <div class="flex">
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Query Supporting document: </p> {{ query.supporting_document }}
+                </div>
+                <div class="w-full md:w-1/2 border px-4 py-2">
+                    <p>Notes: </p> {{ query.notes }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<div class="container mx-auto py-8">
+  <div class="w-90 mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="px-4 py-2">
+          <h2 class="text-lg font-semibold text-gray-800">Resolutions:</h2>
+      </div>
+      <div class="px-4 py-2 bg-gray-100">
+          {% for resolution in resolutions %}
+          <div class="flex flex-col md:flex-row border-b py-4">
+              <div class="md:w-1/2 px-4 py-2 border-r">
+                  {% if resolution.user.doctor %}
+                      <p class="text-sm font-medium text-gray-700">Doctor Details:</p>
+                      <p class="text-sm font-medium text-gray-700">{{ resolution.user.doctor.name }}</p>
+                      <p class="text-sm font-medium text-gray-700">{{ resolution.user.doctor.specialization }}</p>
+                      <p class="text-sm font-medium text-gray-700">Resolution Time: {{ resolution.resolution_time }}</p>
+                  {% else %}
+                    <p class="text-sm font-medium text-gray-700">Staff Details:</p>
+                    <p class="text-sm font-medium text-gray-700">{{ resolution.user.staff.name }}</p>
+                    <p class="text-sm font-medium text-gray-700">{{ resolution.user.staff.role }}</p>
+                    <p class="text-sm font-medium text-gray-700">Resolution Time: {{ resolution.resolution_time }}</p>                  
+                  {% endif %}
+              </div>
+              <div class="md:w-1/2 px-4 py-2">
+                  <p class="text-sm font-medium text-gray-700">Resolution Notes:</p>
+                  <p class="text-sm font-medium text-gray-700">{{ resolution.resolution_notes }}</p>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+  </div>
+</div>
+
+
+
 
 {% endblock %}

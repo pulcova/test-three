@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from users.models import Patient, Doctor, Staff
 
+class QueryCategory(models.Model):
+    name = models.CharField(max_length=50, unique=True) 
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Query(models.Model):
     CHANNEL_CHOICES = (
         ('WEB', 'Website'),
@@ -9,12 +16,6 @@ class Query(models.Model):
         ('SOCIAL', 'Social Media'),
         ('CALL', 'Direct Call'),
         ('IVR', 'IVR'),
-    )
-    CATEGORY_CHOICES = (
-        ('APPT', 'Appointment'),
-        ('MED', 'Medical'),
-        ('BILL', 'Billing'),
-        ('OTHER', 'Other'),
     )
     PRIORITY_CHOICES = (
         ('HIGH', 'High'),
@@ -32,9 +33,9 @@ class Query(models.Model):
         ('B', 'Green'),
         ('C', 'Blue'),
     )
-    channel = models.CharField(max_length=10, choices=CHANNEL_CHOICES)
+    channel = models.CharField(max_length=10, choices=CHANNEL_CHOICES, default='WEB')
     text = models.TextField(null=True, blank=True)
-    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    category = models.ForeignKey(QueryCategory, on_delete=models.PROTECT)    
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='OPEN')
     color_code = models.CharField(max_length=1, choices=COLOR_CHOICES, default='A')
@@ -52,6 +53,9 @@ class Query(models.Model):
         ordering = ['-created_at']
 
 class Resolution(models.Model):
-    query = models.OneToOneField(Query, on_delete=models.CASCADE)
-    resolution_notes = models.TextField()
+    query = models.ForeignKey(Query, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)    
+    resolution_notes = models.TextField(blank=True)
     resolution_time = models.DateTimeField(auto_now_add=True)
+    supporting_document = models.FileField(null=True, blank=True, upload_to='resolution_supporting_documents/')
+

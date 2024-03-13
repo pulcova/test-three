@@ -1,0 +1,21 @@
+{% if query.status == 'OPEN' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-blue-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">OPEN</span>
+</span>
+{% elif query.status == 'PROG' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-purple-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">IN-PROGRESS</span>
+</span>
+{% elif query.status == 'RES' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-green-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">RESOLVED</span>
+</span>
+{% elif query.status == 'CLOSED' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-gray-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">CLOSED</span>
+</span>
+{% endif %}  
