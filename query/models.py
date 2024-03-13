@@ -59,3 +59,7 @@ class Resolution(models.Model):
     resolution_time = models.DateTimeField(auto_now_add=True)
     supporting_document = models.FileField(null=True, blank=True, upload_to='resolution_supporting_documents/')
 
+class QueryTicket(models.Model):
+    query = models.OneToOneField(Query, on_delete=models.CASCADE)
+    ticket_number = models.CharField(max_length=20, unique=True)  
+    created_at = models.DateTimeField(auto_now_add=True)

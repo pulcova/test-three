@@ -6,12 +6,14 @@ from django.views.generic.edit import UpdateView
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseForbidden
 from django.contrib import messages
+from django.core.mail import send_mail
 
 from .models import Query
 from users.decorators import allowed_users
 from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm
 from .models import Query, Resolution
 from users.models import Staff, Patient, Doctor
+from .models import QueryTicket
 
 
 @login_required(login_url='patient-login')
