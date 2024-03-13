@@ -6,14 +6,13 @@ from django.views.generic.edit import UpdateView
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from django.core.mail import send_mail
 
 from .models import Query
 from users.decorators import allowed_users
-from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm
+from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm, FollowUpForm
 from .models import Query, Resolution
 from users.models import Staff, Patient, Doctor
-from .models import QueryTicket
+from .models import FollowUp
 
 
 @login_required(login_url='patient-login')
@@ -34,11 +33,37 @@ def patient_queries_list(request):
 @allowed_users(allowed_roles=['patient'])
 def patient_query_detail(request, query_id):
     query = get_object_or_404(Query, pk=query_id, patient=request.user.patient)
+    followup_form = FollowUpForm() 
+
+    if 'add_notes' in request.POST:
+        followup_form = FollowUpForm(request.POST)
+        if followup_form.is_valid():
+            new_followup = FollowUp.objects.create(
+                query=query,
+                **followup_form.cleaned_data
+            )
+            new_followup.user = request.user
+            new_followup.save()
+            messages.success(request, 'Notes added!')
+            return redirect('patient-query-detail', query_id=query_id)
+        
+    conversation_items = []
+    conversation_items.append({'is_query': True, 'notes': query.text, 'created_at': query.created_at})  
+    for resolution in query.resolution_set.all():
+        conversation_items.append({'is_resolution': True, 'resolution_notes': resolution.resolution_notes, 'user': resolution.user, 'created_at': resolution.resolution_time})
+    for followup in query.followup_set.all():
+        conversation_items.append({'is_followup': True, 'notes': followup.notes, 'created_at': followup.created_at})
+
+    conversation_items.sort(key=lambda item: item['created_at'])
 
     context = {
         'query': query,
-        'resolutions': query.resolution_set.all(), 
+        'resolutions': query.resolution_set.all(),
+        'followups': query.followup_set.all(),  
+        'followup_form': followup_form,
+        'conversation_items': conversation_items,
     }
+
     return render(request, 'query/patient_query_detail.html', context)
 
 

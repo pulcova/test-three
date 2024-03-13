@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Query, Resolution
+from .models import Query, Resolution, FollowUp
 from users.models import Doctor
 
 class PatientQueryRaiseForm(forms.ModelForm):
@@ -57,5 +57,10 @@ class UpdateStatusForm(forms.ModelForm):
     class Meta:
         model = Query
         fields = ['status']
+
+class FollowUpForm(forms.ModelForm):
+    class Meta:
+        model = FollowUp
+        fields = ['notes']
 
 
