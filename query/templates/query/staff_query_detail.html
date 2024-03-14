@@ -1,6 +1,13 @@
 {% extends 'users/staff/staff_base.html' %}
 
 {% block content %}
+
+<style>
+.grid-cols-2 {  
+    max-height: 300px; 
+    overflow-y: auto;  
+}
+</style>
   
 <div class="container mx-auto mt-32 py-8">
     <div class="w-90 mx-auto bg-white rounded-lg shadow-md overflow-hidden">
@@ -46,8 +53,20 @@
             </div>
             <div class="flex">
                 <div class="w-full md:w-1/2 border px-4 py-2">
-                    <p>Query Supporting document: </p> {{ query.supporting_document }}
-                </div>
+                    <p>Query Supporting Document: </p>
+                    {% if query.supporting_document %}
+                    <span class="flex items-center gap-2">
+                        <a href="{{ query.supporting_document.url }}" target="_blank" class="text-blue-500 hover:underline flex items-center">
+                            <span>Download</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
+                            </svg>
+                        </a>
+                    </span>
+                    {% else %}
+                    No document attached.
+                    {% endif %}
+                </div>   
                 <div class="w-full md:w-1/2 border px-4 py-2">
                     <p>Notes: </p> {{ query.notes }}
                 </div>
@@ -65,10 +84,14 @@
         <div class="px-4 py-2 bg-gray-100">
             <div class="flex">
                 <div class="w-full md:w-1/2 border px-4 py-2">
-                    <form method="post" class="px-4 py-2">
+                    <form method="post" class="px-4 py-2" enctype="multipart/form-data"> 
                         {% csrf_token %}
                         <label for="id_resolution_notes" class="block text-sm font-medium text-gray-700">Provide Resolution</label>
                         <textarea id="id_resolution_notes" name="resolution_notes" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                        <div class="mt-2"> 
+                            <label for="id_supporting_document" class="block text-sm font-medium text-gray-700">Supporting Document (optional)</label>
+                            <input type="file" id="id_supporting_document" name="supporting_document" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
                         <button type="submit" name="add_resolution" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Resolution</button>
                     </form>
                 </div>
@@ -110,35 +133,50 @@
 
 <div class="container mx-auto py-8">
     <div class="w-90 mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-4 py-2">
-            <h2 class="text-lg font-semibold text-gray-800">Resolutions:</h2>
-        </div>
-        <div class="px-4 py-2 bg-gray-100">
-            {% for resolution in resolutions %}
-            <div class="flex flex-col md:flex-row border-b py-4">
-                <div class="md:w-1/2 px-4 py-2 border-r">
-                    {% if resolution.user.doctor %}
-                        <p class="text-sm font-medium text-gray-700">Doctor Details:</p>
-                        <p class="text-sm font-medium text-gray-700">{{ resolution.user.doctor.name }}</p>
-                        <p class="text-sm font-medium text-gray-700">{{ resolution.user.doctor.specialization }}</p>
-                        <p class="text-sm font-medium text-gray-700">Resolution Time: {{ resolution.resolution_time }}</p>
-                    {% else %}
-                      <p class="text-sm font-medium text-gray-700">Staff Details:</p>
-                      <p class="text-sm font-medium text-gray-700">{{ resolution.user.staff.name }}</p>
-                      <p class="text-sm font-medium text-gray-700">{{ resolution.user.staff.role }}</p>
-                      <p class="text-sm font-medium text-gray-700">Resolution Time: {{ resolution.resolution_time }}</p>                  
-                    {% endif %}
+      <div class="px-4 py-2">
+        <h2 class="text-lg font-semibold text-gray-800">Conversation:</h2>
+      </div>
+      <div class="px-4 py-2 bg-gray-100 grid grid-cols-2 gap-4">  
+        {% for item in conversation_items %} 
+          <div class="sender-column {% if item.author == query.patient %} text-right {% endif %}"> 
+            {% if item.author == query.patient %}
+              <p class="text-sm text-gray-600 text-left">Patient ({{ item.author.name }})</p> 
+            {% elif item.user.doctor %} 
+              <p class="text-sm text-gray-600">Doctor (Dr. {{ item.user.doctor.name }})</p>
+              <p class="text-sm text-gray-600">{{ item.user.doctor.specialization }}</p>                          
+            {% else %}
+              <p class="text-sm text-gray-600">You ({{ item.user.staff.name }})</p>
+              <p class="text-sm text-gray-600">{{ item.user.staff.role }}</p>
+            {% endif %}
+            <p class="text-sm text-gray-500 text-left">{{ item.created_at }}</p>
+          </div>
+          <div class="message-column border p-3 rounded-md {% if item.author == query.patient %} bg-gray-200 {% endif %}"> 
+            {% if item.is_query %}
+              <p>{{ item.notes }}</p> 
+            {% elif item.is_resolution %}
+              <p>{{ item.resolution_notes }}</p>
+              {% if item.supporting_document_url %}
+                <div class="flex items-center space-x-2"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                    </svg>                  
+                    <a href="{{ item.supporting_document_url }}" target="_blank" class="text-blue-500 hover:underline">View Attached Document</a>  
                 </div>
-                <div class="md:w-1/2 px-4 py-2">
-                    <p class="text-sm font-medium text-gray-700">Resolution Notes:</p>
-                    <p class="text-sm font-medium text-gray-700">{{ resolution.resolution_notes }}</p>
+             {% endif %}
+            {% else %}
+              <p>{{ item.notes }}</p>
+              {% if item.follow_up_supporting_document_url %}
+                <div class="flex items-center space-x-2"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                    </svg>                  
+                    <a href="{{ item.follow_up_supporting_document_url }}" target="_blank" class="text-blue-500 hover:underline">View Attached Document</a>  
                 </div>
-            </div>
-            {% endfor %}
-        </div>
+             {% endif %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-
-
-
 {% endblock %}

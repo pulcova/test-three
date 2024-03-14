@@ -19,3 +19,16 @@ def create_ticket(sender, instance, created, **kwargs):
             from_email=settings.EMAIL_HOST_USER,  
             recipient_list=[instance.patient.email],  
         )
+
+@receiver(post_save, sender=Query)
+def send_resolution_email(sender, instance, created, **kwargs):
+    if instance.status == 'RES':  
+        patient_email = instance.patient.email
+        subject = 'Your Query Has Been Resolved'
+        message = f'Dear {instance.patient.name},\n\nYour query ({instance.text}) has been resolved. Please log in to view the resolution details.\n\nBest Regards,\nSupport Team'
+        send_mail(
+            subject, 
+            message, 
+            from_email=settings.EMAIL_HOST_USER, 
+            recipient_list=[patient_email],
+        ) 

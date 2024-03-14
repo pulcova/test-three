@@ -7,12 +7,10 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 
-from .models import Query
-from users.decorators import allowed_users
-from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm, FollowUpForm
-from .models import Query, Resolution
 from users.models import Staff, Patient, Doctor
-from .models import FollowUp
+from users.decorators import allowed_users
+from .models import Query, Resolution, FollowUp
+from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm, FollowUpForm
 
 
 @login_required(login_url='patient-login')
@@ -36,23 +34,42 @@ def patient_query_detail(request, query_id):
     followup_form = FollowUpForm() 
 
     if 'add_notes' in request.POST:
-        followup_form = FollowUpForm(request.POST)
+        followup_form = FollowUpForm(request.POST, request.FILES)
         if followup_form.is_valid():
             new_followup = FollowUp.objects.create(
                 query=query,
                 **followup_form.cleaned_data
             )
+
+            if 'supporting_document' in request.FILES:
+                    new_followup.supporting_document = request.FILES['supporting_document']
+
             new_followup.user = request.user
             new_followup.save()
             messages.success(request, 'Notes added!')
             return redirect('patient-query-detail', query_id=query_id)
         
     conversation_items = []
-    conversation_items.append({'is_query': True, 'notes': query.text, 'created_at': query.created_at})  
+    conversation_items.append({
+        'is_query': True, 
+        'notes': query.text, 
+        'created_at': query.created_at
+        })  
     for resolution in query.resolution_set.all():
-        conversation_items.append({'is_resolution': True, 'resolution_notes': resolution.resolution_notes, 'user': resolution.user, 'created_at': resolution.resolution_time})
+        conversation_items.append({
+            'is_resolution': True, 
+            'resolution_notes': resolution.resolution_notes, 
+            'user': resolution.user, 
+            'created_at': resolution.resolution_time,
+            'supporting_document_url': resolution.supporting_document.url if resolution.supporting_document else None,
+            })
     for followup in query.followup_set.all():
-        conversation_items.append({'is_followup': True, 'notes': followup.notes, 'created_at': followup.created_at})
+        conversation_items.append({
+            'is_followup': True, 
+            'notes': followup.notes, 
+            'created_at': followup.created_at,
+            'follow_up_supporting_document_url': followup.supporting_document.url if followup.supporting_document else None,
+            })
 
     conversation_items.sort(key=lambda item: item['created_at'])
 
@@ -127,14 +144,16 @@ class PatientQueryUpdateView(UpdateView):
             return HttpResponseForbidden()
         return super().form_valid(form)
 
-
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def queris_inbox_staff(request):
     staff_member = get_object_or_404(Staff, user=request.user) 
     queries = Query.objects.filter(assigned_staff=staff_member) 
 
     return render(request, 'query/staff_queries_inbox.html', {'queries': queries})
 
-
+@login_required(login_url='staff-login')
+@allowed_users(allowed_roles=['staff'])
 def staff_query_view(request, query_id):
     query = get_object_or_404(Query, pk=query_id)
 
@@ -168,16 +187,41 @@ def staff_query_view(request, query_id):
                 messages.success(request, 'Doctor assigned!')
                 return redirect('staff-query-detail', query_id=query_id)
         elif 'add_resolution' in request.POST:  
-            resolution_form = ResolutionForm(request.POST)
+            resolution_form = ResolutionForm(request.POST, request.FILES)
             if resolution_form.is_valid():
                 new_resolution = Resolution.objects.create(
                     query=query,
                     user=request.user,
                     **resolution_form.cleaned_data
                 )
+
+                if 'supporting_document' in request.FILES:
+                    new_resolution.supporting_document = request.FILES['supporting_document']
+
                 new_resolution.save()
                 messages.success(request, 'Resolution added!')
                 return redirect('staff-query-detail', query_id=query_id) 
+            
+    conversation_items = []
+    conversation_items.append({'is_query': True, 'notes': query.text, 'created_at': query.created_at, 'author':query.patient })  
+    for resolution in query.resolution_set.all():
+        conversation_items.append({
+            'is_resolution': True, 
+            'resolution_notes': resolution.resolution_notes, 
+            'user': resolution.user, 
+            'created_at': resolution.resolution_time,             
+            'supporting_document_url': resolution.supporting_document.url if resolution.supporting_document else None,
+        })
+    for followup in query.followup_set.all():  
+        conversation_items.append({
+            'is_followup': True, 
+            'notes': followup.notes, 
+            'created_at': followup.created_at, 
+            'author': followup.query.patient,
+            'follow_up_supporting_document_url': followup.supporting_document.url if followup.supporting_document else None,
+        })
+
+    conversation_items.sort(key=lambda item: item['created_at'])  
 
     context = {
         'query': query, 
@@ -186,11 +230,13 @@ def staff_query_view(request, query_id):
         'update_status_form': update_status_form, 
         'assign_doctor_form': assign_doctor_form,
         'resolution_form': resolution_form, 
-        'resolutions': query.resolution_set.all(),  
+        'resolutions': query.resolution_set.all(), 
+        'conversation_items': conversation_items, 
     }
     return render(request, 'query/staff_query_detail.html', context) 
 
-
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
 def queries_inbox_doctor(request):
     doctor_member = get_object_or_404(Doctor, user=request.user) 
     queries = Query.objects.filter(doctor=doctor_member) 
@@ -198,6 +244,8 @@ def queries_inbox_doctor(request):
     return render(request, 'query/doctor_queries_inbox.html', {'queries': queries})
 
 
+@login_required(login_url='doctor-login')
+@allowed_users(allowed_roles=['doctor'])
 def doctor_query_view(request, query_id):
     query = get_object_or_404(Query, pk=query_id)
 
@@ -226,16 +274,41 @@ def doctor_query_view(request, query_id):
                 messages.success(request, 'Status updated!')
                 return redirect('doctor-query-detail', query_id=query_id) 
         elif 'add_resolution' in request.POST:  
-            resolution_form = ResolutionForm(request.POST)
+            resolution_form = ResolutionForm(request.POST, request.FILES)
             if resolution_form.is_valid():
                 new_resolution = Resolution.objects.create(
                     query=query,
                     user=request.user,
                     **resolution_form.cleaned_data
                 )
+
+                if 'supporting_document' in request.FILES:
+                    new_resolution.supporting_document = request.FILES['supporting_document']
+
                 new_resolution.save()
                 messages.success(request, 'Resolution added!')
-                return redirect('doctor-query-detail', query_id=query_id) 
+                return redirect('doctor-query-detail', query_id=query_id)    
+
+    conversation_items = []
+    conversation_items.append({'is_query': True, 'notes': query.text, 'created_at': query.created_at, 'author':query.patient })  
+    for resolution in query.resolution_set.all():
+        conversation_items.append({
+            'is_resolution': True, 
+            'resolution_notes': resolution.resolution_notes, 
+            'user': resolution.user, 
+            'created_at': resolution.resolution_time,
+            'supporting_document_url': resolution.supporting_document.url if resolution.supporting_document else None,
+            })
+    for followup in query.followup_set.all():  
+        conversation_items.append({
+            'is_followup': True, 
+            'notes': followup.notes, 
+            'created_at': followup.created_at, 
+            'author': followup.query.patient,
+            'follow_up_supporting_document_url': followup.supporting_document.url if followup.supporting_document else None,
+            })
+
+    conversation_items.sort(key=lambda item: item['created_at'])        
 
     context = {
         'query': query, 
@@ -244,8 +317,6 @@ def doctor_query_view(request, query_id):
         'update_status_form': update_status_form, 
         'resolution_form': resolution_form, 
         'resolutions': query.resolution_set.all(),  
+        'conversation_items': conversation_items,
     }
-    return render(request, 'query/doctor_query_detail.html', context) 
-
-
-
+    return render(request, 'query/doctor_query_detail.html', context)

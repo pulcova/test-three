@@ -18,7 +18,9 @@ class PatientQueryRaiseForm(forms.ModelForm):
 class ResolutionForm(forms.ModelForm):
     class Meta:
         model = Resolution
-        fields = ['resolution_notes']
+        fields = ['resolution_notes', 'supporting_document']
+
+
 
 class AssignDoctorForm(forms.ModelForm):
     doctor = forms.ModelChoiceField(
@@ -61,6 +63,6 @@ class UpdateStatusForm(forms.ModelForm):
 class FollowUpForm(forms.ModelForm):
     class Meta:
         model = FollowUp
-        fields = ['notes']
+        fields = ['notes', 'supporting_document']
 
 

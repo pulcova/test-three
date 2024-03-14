@@ -7,7 +7,7 @@ class QueryCategory(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return self.name
+        return f"Category: {self.name}"
 
 class Query(models.Model):
     CHANNEL_CHOICES = (
@@ -52,6 +52,9 @@ class Query(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def __str__(self):
+        return f"Query #{self.id}: {self.channel} ({self.priority})" 
+
 class Resolution(models.Model):
     query = models.ForeignKey(Query, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)    
@@ -59,12 +62,22 @@ class Resolution(models.Model):
     resolution_time = models.DateTimeField(auto_now_add=True)
     supporting_document = models.FileField(null=True, blank=True, upload_to='resolution_supporting_documents/')
 
+    def __str__(self):
+        return f"Resolution for Query #{self.query.id}" 
+
 class FollowUp(models.Model):
     query = models.ForeignKey(Query, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    supporting_document = models.FileField(null=True, blank=True, upload_to='followup_supporting_documents/')
+
+    def __str__(self):
+        return f"Follow Up for Query #{self.query.id}" 
 
 class QueryTicket(models.Model):
     query = models.OneToOneField(Query, on_delete=models.CASCADE)
     ticket_number = models.CharField(max_length=20, unique=True)  
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Ticket: {self.ticket_number}" 
