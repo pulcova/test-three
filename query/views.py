@@ -12,6 +12,10 @@ from users.decorators import allowed_users
 from .models import Query, Resolution, FollowUp
 from .forms import ResolutionForm, PatientQueryRaiseForm, AssignDoctorForm, QueryUpdateForm, UpdatePriorityForm, UpdateStatusForm, FollowUpForm
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @login_required(login_url='patient-login')
 @allowed_users(allowed_roles=['patient'])
@@ -117,12 +121,14 @@ def patient_raise_query(request):
             query.patient = patient
             query.save()  
 
+
             if query.category.name in CATEGORY_TO_ROLE_MAPPING:  
                 roles_for_category = CATEGORY_TO_ROLE_MAPPING[query.category.name]
                 potential_staff = Staff.objects.filter(role__name__in=roles_for_category)
                 staff_to_assign = potential_staff[:2]
                 query.assigned_staff.add(*staff_to_assign)
 
+            logger.debug(f'Assigned staff: {query.assigned_staff.all()}')
             return redirect('patient-queries-list')
     
     form = PatientQueryRaiseForm()

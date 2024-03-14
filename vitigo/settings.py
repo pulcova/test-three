@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'redis',
     'honeybadger',
     'organization',
+    'django_twilio',
 ]
 
 MIDDLEWARE = [
@@ -159,12 +160,18 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'level': 'DEBUG',
         },
     },
     'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',  # Set to 'DEBUG'
+        'handlers': ['file'],
+        'level': 'DEBUG',
     },
 }
+
+TWILIO_ACCOUNT_SID = 'ACb184b65d41db50961a0bc9610113f948'
+TWILIO_AUTH_TOKEN = 'c30a41698f23682601c820fc4a6df8f1'
+TWILIO_FROM_NUMBER = '+14156350576' 
