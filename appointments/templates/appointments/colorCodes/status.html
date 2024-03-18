@@ -1,0 +1,26 @@
+{% if appointment.status == 'scheduled' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-blue-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">Scheduled</span>
+</span>
+{% elif appointment.status == 'confirmed' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-green-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">Confirmed</span>
+</span>
+{% elif appointment.status == 'cancelled' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-red-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">Cancelled</span>
+</span>
+{% elif appointment.status == 'completed' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-gray-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">Completed</span>
+</span>
+{% elif appointment.status == 'rescheduled' %}
+<span class="relative inline-block px-3 py-1 font-semibold leading-tight text-white bg-purple-600 rounded-full">
+    <span aria-hidden="true" class="absolute inset-0 rounded-full opacity-50"></span>
+    <span class="relative">Rescheduled</span>
+</span>
+{% endif %}

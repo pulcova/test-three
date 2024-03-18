@@ -7,7 +7,7 @@ class QueryCategory(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f"Category: {self.name}"
+        return f"{self.name}"
 
 class Query(models.Model):
     CHANNEL_CHOICES = (

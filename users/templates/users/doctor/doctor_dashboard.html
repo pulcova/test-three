@@ -3,11 +3,28 @@
 {% block content %}
 <section class="text-gray-600 body-font">
     <div class="container px-5 py-24 mx-auto">
-      <div class="flex flex-col text-center w-full mb-20">
-        <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Upcoming Appointments</h1>
-        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Stay informed and prepared with your upcoming medical appointments at a glance</p>
+      <div class="flex justify-between mb-10">  
+        <div class="flex flex-col text-center w-full">
+          <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Upcoming Appointments</h1>
+          <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Stay informed and prepared with your upcoming medical appointments at a glance</p>
+        </div>
       </div>
-      <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+      <div class="lg:w-2/3 w-full mx-auto overflow-auto">        
+        <form action="{% url 'doctor-dashboard' %}" method="GET" class="mb-4">
+          <select name="filter" class="appearance-none bg-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            <option value="today"{% if current_filter == 'today' %} selected{% endif %} class="bg-white hover:bg-blue-100">Today</option>
+            <option value="tomorrow"{% if current_filter == 'tomorrow' %} selected{% endif %} class="bg-white hover:bg-blue-100">Tomorrow</option>
+            <option value="past"{% if current_filter == 'past' %} selected{% endif %} class="bg-white hover:bg-blue-100">Past Appointments</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4ZM3 10a7 7 0 1114 0 7 7 0 01-14 0Z"></path>
+            </svg>
+          </div>
+          <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Apply Filter
+          </button>
+        </form>
         <table class="table-auto w-full text-left whitespace-no-wrap">
           <thead>
             <tr>
@@ -60,3 +77,4 @@
     </div>
   </section>
 {% endblock %}
+

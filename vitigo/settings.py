@@ -10,8 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import sentry_sdk
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +51,8 @@ INSTALLED_APPS = [
     'honeybadger',
     'organization',
     'django_twilio',
+    'consultation',
+    'body',
 ]
 
 MIDDLEWARE = [
@@ -142,15 +147,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'postmaster@pulcova.social'
-EMAIL_HOST_PASSWORD = '9d6687f27d5cd1ba8b88680f1cc9f57b-2c441066-f183a652'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-MAILGUN_DOMAIN = 'pulcova.social'
-MAILGUN_API_KEY = 'c1717ab89d0cb0e164e38ffc84b8ca75-2c441066-175b84ed' 
+MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN')
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
 
 
 HONEYBADGER = {
-  'API_KEY': 'hbp_lhjHUpBlsv4AqWvz3Pl9F1VOfx59Lh0nxU8h'
+  'API_KEY': os.getenv('HONEYBADGER_API_KEY'),
 }
 
 HONEYBADGER_ENVIRONMENT = 'development' 
@@ -172,6 +177,18 @@ LOGGING = {
     },
 }
 
-TWILIO_ACCOUNT_SID = 'ACb184b65d41db50961a0bc9610113f948'
-TWILIO_AUTH_TOKEN = 'c30a41698f23682601c820fc4a6df8f1'
-TWILIO_FROM_NUMBER = '+14156350576' 
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_FROM_NUMBER = os.getenv('TWILIO_FROM_NUMBER')
+
+
+sentry_sdk.init(
+    dsn="https://c5dc842bfa2ec060a31b71c610e3196d@o4506910998659072.ingest.us.sentry.io/4506911004753920",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)

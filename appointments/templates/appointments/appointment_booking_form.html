@@ -1,58 +1,125 @@
 {% extends 'users/patient/patient_base.html' %}
-
+{% load static %}
 {% block content %}
-<div class="mt-20">
-  <div class="container mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Book Appointment</h2>
-    <form class="space-y-6" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="grid grid-cols-2 gap-6"> 
-        <div>
-          <label class="block font-medium mb-1">Patient:</label>
-          {{ form.patient }}
+<style>
+  #formPopup {
+    position: absolute; /* This is crucial */
+    top: 0; 
+    left: 0; 
+    z-index: 10; /* Ensure it's on top of the image */
+    background-color: white; 
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+</style>
+<div class="container mx-auto mt-32">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Left Card Box for Image -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <!-- Replace 'your_image.jpg' with the path to your image -->
+      <img src="{% static 'images/female.jpg' %}" alt="Your Image" class="w-full h-auto rounded-lg" id="bodyImage">
+      <div id="formPopup" class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 z-50">
+        <form method="POST" action="{% url 'appointment-booking-form' %}">
+          {% csrf_token %}
+          <input type="hidden" name="coordinates" id="coordinatesInput">
+      
+          <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-semibold mb-2">Body Part:</label>
+            <input type="text" id="name" name="name" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500">
+          </div>
+      
+          <div class="mb-4">
+            <label for="note" class="block text-gray-700 font-semibold mb-2">Note:</label>
+            <textarea id="note" name="note" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+      
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">Submit</button>
+        </form>
+      </div>
+      
+    </div>
+    <!-- Right Card Box for Booking Form -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h2 class="text-2xl font-bold mb-4">Book Appointment</h2>
+      <form class="space-y-6" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="grid grid-cols-2 gap-6"> 
+          <div>
+            <label class="block font-medium mb-1">Patient:</label>
+            {{ form.patient }}
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Doctor:</label>
+            {{ form.doctor }}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block font-medium mb-1">Date:</label>
+            {{ form.date }}
+          </div>
+          <div>
+            <label class="block font-medium mb-1">Start Time:</label>
+            {{ form.start_time }}
+          </div>
+          <div>
+            <label class="block font-medium mb-1">End Time:</label>
+            {{ form.end_time }} 
+          </div>
         </div>
         <div>
-          <label class="block font-medium mb-1">Doctor:</label>
-          {{ form.doctor }}
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block font-medium mb-1">Date:</label>
-          {{ form.date }}
+          <label class="block font-medium mb-1">Mode:</label>
+          {{ form.mode }}
         </div>
         <div>
-          <label class="block font-medium mb-1">Start Time:</label>
-          {{ form.start_time }}
+          <label for="id_reason" class="block font-medium mb-1">Reason:</label>
+          <textarea id="id_reason" name="reason" rows="4" class="w-full border border-gray-300 rounded-md p-2"></textarea>
         </div>
         <div>
-          <label class="block font-medium mb-1">End Time:</label>
-          {{ form.end_time }} 
+          <label for="id_notes" class="block font-medium mb-1">Notes:</label>
+          <textarea id="id_notes" name="notes" rows="4" class="w-full border border-gray-300 rounded-md p-2"></textarea>
         </div>
-      </div>
-      <div>
-        <label class="block font-medium mb-1">Mode:</label>
-        {{ form.mode }}
-      </div>
-      <div>
-        <label for="id_reason" class="block font-medium mb-1">Reason:</label>
-        <textarea id="id_reason" name="reason" rows="4" class="w-full border border-gray-300 rounded-md p-2"></textarea>
-      </div>
-      <div>
-        <label for="id_notes" class="block font-medium mb-1">Notes:</label>
-        <textarea id="id_notes" name="notes" rows="4" class="w-full border border-gray-300 rounded-md p-2"></textarea>
-      </div>
-      <div>
-        <label for="id_supporting_document" class="block font-medium mb-1">Upload Supporting document:</label>
-        {{ form.supporting_document }}
-      </div>
-      <div>
-        <input type="checkbox" id="id_details_confirmation" class="mr-2" required>
-        <label for="id_details_confirmation">I confirm the appointment details</label>
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Book Appointment</button>
-    </form>
+        <div>
+          <label for="id_supporting_document" class="block font-medium mb-1">Upload Supporting document:</label>
+          {{ form.supporting_document }}
+        </div>
+        <div>
+          <input type="checkbox" id="id_details_confirmation" class="mr-2" required>
+          <label for="id_details_confirmation">I confirm the appointment details</label>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Book Appointment</button>
+      </form>
+    </div>
   </div>
-  
 </div>
+
+<script>
+  const bodyImage = document.getElementById('bodyImage');
+const formPopup = document.getElementById('formPopup');
+const coordinatesInput = document.getElementById('coordinatesInput');
+
+bodyImage.addEventListener('click', (event) => {
+  // Get click coordinates relative to the image
+  const x = event.offsetX;
+  const y = event.offsetY;
+
+  coordinatesInput.value = `${x},${y}`; // Store coordinates
+
+  console.log('Image clicked!'); // Verify event listener
+  console.log('Coordinates:', event.offsetX, event.offsetY);
+
+  // Position and show the form popup
+  formPopup.style.left = `${x}px`;
+  formPopup.style.top = `${y}px`;
+  formPopup.classList.remove('hidden'); 
+});
+
+ 
+
+// Example - Hide form on form submission - adjust if needed
+formPopup.querySelector('form').addEventListener('submit', () => {
+    formPopup.classList.add('hidden'); 
+});
+
+</script>
 {% endblock %}

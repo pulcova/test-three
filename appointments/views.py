@@ -18,29 +18,12 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
+from datetime import datetime, date, timedelta
 import os
 
 def convert_to_24_hour_format(time_str):
     time_obj = datetime.strptime(time_str, '%I:%M %p')
     return time_obj.strftime('%H:%M:%S')
-
-def send_appointment_confirmation_email(appointment):
-    subject = 'Appointment Confirmation'
-    context = {
-        'appointment': appointment,
-        'doctor': appointment.doctor,
-        'patient': appointment.patient,
-    }
-    message_plain = render_to_string('appointments/appointment_confirmation_email.txt', context)
-    message_html = render_to_string('appointments/appointment_confirmation_email.html', context)
-
-    send_mail(
-        subject,
-        message_plain,
-        settings.EMAIL_HOST_USER,  
-        [appointment.patient.email],  
-        html_message=message_html,
-    )
 
 @login_required(login_url='patient-login')
 @allowed_users(allowed_roles=['patient'])
@@ -107,7 +90,10 @@ def appointment_booking_form(request):
                 new_filename = f"{appointment.patient.name}_{current_date}_{original_filename}"
                 appointment.supporting_document.name = new_filename
 
-            slot = Slot.objects.get(doctor=appointment.doctor, date=appointment.date, start_time=appointment.start_time, end_time=appointment.end_time)
+            try:
+                slot = Slot.objects.get(doctor=appointment.doctor, date=appointment.date, start_time=appointment.start_time, end_time=appointment.end_time)
+            except Slot.DoesNotExist:
+                slot = None  
 
             slot.is_available = False
             slot.patient = appointment.patient
@@ -115,7 +101,6 @@ def appointment_booking_form(request):
 
             appointment.save()
             appointment.schedule_follow_up()
-            send_appointment_confirmation_email(appointment)
             return redirect('patient-appointment-success')
         else:
             print("Form is invalid!")  
@@ -277,10 +262,22 @@ def reschedule_appointment(request, appointment_id):
 def doctor_appointment_list_view(request):
     user = request.user
     doctor = Doctor.objects.get(user=user)
+
+    filter_type = request.GET.get('filter', 'today') # Get filter value
+
     appointments = Appointment.objects.filter(doctor=doctor)
-    return render(request, 'users/doctor/doctor_dashboard.html', {'appointments': appointments})
+
+    if filter_type == 'today':
+        appointments = appointments.filter(date=date.today())
+    elif filter_type == 'tomorrow':
+        appointments = appointments.filter(date=date.today() + timedelta(days=1))
+    elif filter_type == 'past':
+        appointments = appointments.filter(date__lt=date.today())
+
+    return render(request, 'users/doctor/doctor_dashboard.html', {'appointments': appointments, 'current_filter': filter_type})
 
 @login_required(login_url='doctor-login')
 def doctor_appointment_detail_view(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
     return render(request, 'appointments/doctor_appointment_details.html', {'appointment': appointment})
+ 
