@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Model Viewer</title>
+    <script type="module" src="https://threejs.org/build/three.min.js"></script>
+    <script type="module" src="https://threejs.org/examples/jsm/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div id="model_container"></div>
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('model_container').appendChild(renderer.domElement);
+
+        const loader = new THREE.GLTFLoader();
+        loader.load('/static/models/{{ model_name }}', (gltf) => {
+            scene.add(gltf.scene);
+            camera.position.z = 5;
+            animate(); // Start rendering loop
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>

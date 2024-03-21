@@ -4,6 +4,9 @@ from datetime import timedelta, date
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime, timedelta
+from django.utils import timezone
+
+from consultation.models import Consultation
 
 class Appointment(models.Model):
     STATUS_CHOICES = (
@@ -36,6 +39,7 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     details_confirmation = models.BooleanField(default=False)
     supporting_document = models.FileField(upload_to='patient_appointment_documents/', null=True, blank=True)
+    start_consultation = models.BooleanField(default=False)
 
     def schedule_follow_up(self):
         if self.date is None or self.start_time is None:

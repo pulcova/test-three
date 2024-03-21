@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.db import models
 from users.models import Patient, Doctor, Staff
 

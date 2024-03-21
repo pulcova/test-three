@@ -17,3 +17,10 @@ def submit_body_part(request):
         return redirect('appointment-booking-form')  # Redirect to success page
     else:
         return render(request, 'appointments/appointment_booking_form.html')
+
+
+
+def display_3d_model(request):
+    model_name = 'male.glb'  
+    context = {'model_name': model_name}
+    return render(request, 'body/model_viewer_template.html', context)

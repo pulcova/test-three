@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <section class="text-gray-600 body-font">
-    <div class="container px-5 py-24 mx-auto">
+    <div class="container px-5 py-5 mx-auto">
       <div class="flex flex-col text-center w-full mb-20">
         <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Select Category to Upload Patient Documents</h1>
         <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Please choose the appropriate category below to upload patient documents. Ensure that the uploaded documents are accurate and relevant to the selected category.</p>
@@ -13,7 +13,6 @@
         <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'upload_report' %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 512 512" id="reports"><path d="m285.79,116.41c-4.88-4.88-4.88-12.8,0-17.68l31.39-31.39c4.88-4.88,12.8-4.88,17.68,0l31.39,31.39c4.88,4.88,4.88,12.8,0,17.68-2.44,2.44-5.64,3.66-8.84,3.66s-6.4-1.22-8.84-3.66l-10.05-10.05v48.43c0,6.9-5.6,12.5-12.5,12.5s-12.5-5.6-12.5-12.5v-48.43l-10.05,10.05c-4.88,4.88-12.8,4.88-17.68,0Zm38.24,93.31c0,6.9,5.6,12.5,12.5,12.5h42.86c6.9,0,12.5-5.6,12.5-12.5s-5.6-12.5-12.5-12.5h-42.86c-6.9,0-12.5,5.6-12.5,12.5Zm55.36,35.04h-42.86c-6.9,0-12.5,5.6-12.5,12.5s5.6,12.5,12.5,12.5h42.86c6.9,0,12.5-5.6,12.5-12.5s-5.6-12.5-12.5-12.5Zm-227.1-27.81l10.05-10.05v48.43c0,6.9,5.6,12.5,12.5,12.5s12.5-5.6,12.5-12.5v-48.43l10.05,10.05c2.44,2.44,5.64,3.66,8.84,3.66s6.4-1.22,8.84-3.66c4.88-4.88,4.88-12.8,0-17.68l-31.39-31.39c-4.88-4.88-12.8-4.88-17.68,0l-31.39,31.39c-4.88,4.88-4.88,12.8,0,17.68,4.88,4.88,12.8,4.88,17.68,0Zm75.91,80.81h-106.72c-6.9,0-12.5,5.6-12.5,12.5s5.6,12.5,12.5,12.5h106.72c6.9,0,12.5-5.6,12.5-12.5s-5.6-12.5-12.5-12.5Zm0,47.54h-106.72c-6.9,0-12.5,5.6-12.5,12.5s5.6,12.5,12.5,12.5h106.72c6.9,0,12.5-5.6,12.5-12.5s-5.6-12.5-12.5-12.5Zm233.16,43.67c0,57.89-47.1,104.99-104.99,104.99-35.31,0-66.61-17.53-85.65-44.34-4.44,1.58-9.22,2.45-14.2,2.45H93.14c-23.43,0-42.5-19.06-42.5-42.5v-248.48c0-23.43,19.07-42.5,42.5-42.5h108.69v-58.03c0-23.44,19.06-42.5,42.5-42.5h163.38c23.43,0,42.5,19.06,42.5,42.5v248.47c0,8.11-2.29,15.69-6.24,22.14,10.98,16.59,17.39,36.46,17.39,57.8ZM226.83,118.58h29.69c23.44,0,42.5,19.07,42.5,42.5v139.99c16.5-10.8,36.2-17.09,57.35-17.09,26.3,0,50.36,9.72,68.8,25.75,0-.24.04-.47.04-.71V60.55c0-9.65-7.86-17.5-17.5-17.5h-163.38c-9.65,0-17.5,7.85-17.5,17.5v58.03Zm31.66,308.37c-4.59-11.79-7.11-24.59-7.11-37.98,0-24.55,8.47-47.15,22.64-65.05v-162.83c0-9.64-7.85-17.5-17.5-17.5H93.14c-9.65,0-17.5,7.86-17.5,17.5v248.48c0,9.65,7.85,17.5,17.5,17.5h163.38c.67,0,1.33-.04,1.97-.11Zm177.86-37.98c0-44.11-35.88-79.99-79.99-79.99s-79.99,35.88-79.99,79.99,35.88,79.99,79.99,79.99,79.99-35.88,79.99-79.99Zm-71.15-52.35c-4.88-4.88-12.8-4.88-17.68,0l-34.75,34.75c-4.88,4.88-4.88,12.8,0,17.68,4.88,4.88,12.8,4.88,17.68,0l13.41-13.41v56.85c0,6.9,5.6,12.5,12.5,12.5s12.5-5.6,12.5-12.5v-56.85l13.41,13.41c2.44,2.44,5.64,3.66,8.84,3.66s6.4-1.22,8.84-3.66c4.88-4.88,4.88-12.8,0-17.68l-34.75-34.75Z"></path></svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">8</h2>
             <p class="leading-relaxed">Reports</p>
           </div>
@@ -22,11 +21,6 @@
         <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'upload_prescription' %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-blue-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"></path>
-            </svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">10</h2>
             <p class="leading-relaxed">Prescriptions</p>
           </div>
@@ -35,10 +29,6 @@
         <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'upload_bill' %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-blue-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-              <path d="M3 18v-6a9 9 0 0118 0v6"></path>
-              <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path>
-            </svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">10</h2>
             <p class="leading-relaxed">Bills</p>
           </div>
@@ -47,9 +37,6 @@
         <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
         <a href="{% url 'upload_vaccination' %}">
           <div class="border-2 border-gray-200 px-4 py-6 rounded-lg">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-blue-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
             <h2 class="title-font font-medium text-3xl text-gray-900">2</h2>
             <p class="leading-relaxed">Vaccinations</p>
           </div>
